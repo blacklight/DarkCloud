@@ -12,6 +12,11 @@ if [ ! -d "$node" ]; then
 	exit 1
 fi
 
+if [ -f ".run/$node.pid" ]; then
+	echo "$node seems to be already running"
+	exit 1
+fi
+
 cd "$node"
 
 if [ ! -f "darkcloud-trunk.jar" -o ! -f "darkcloud.conf" ]; then

@@ -139,3 +139,14 @@ For example:
 * Retrieve the content of a specific file from the network:
 	$ python client.py -r GET -h <host addr> -p <listen port> -F <remote file>
 
+# Known issues
+
+* When you encrypt a file, DarkCloud could fail and return an exception like:
+	java.security.InvalidKeyException: Illegal key size
+
+DarkCloud actually uses 256 AES symmetric keys for encrypting the files. Such a
+size may be considered illegal in some countries, depending on how the JRE was
+configured or the mirror from which was downloaded. The solution in this case is
+to download and install the **Java Cryptography Extension (JCE)** for your JRE.
+You should find online the instructions for it.
+
