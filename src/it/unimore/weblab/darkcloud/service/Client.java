@@ -72,8 +72,13 @@ public class Client extends Thread {
 				
 				if (methodName.equals(requestType))
 				{
-					net.getLogger().info("[DarkCloud::Info] " + requestType + " request from " +
-						sock.getRemoteSocketAddress());
+                    if (requestType.equalsIgnoreCase("ping")) {
+    					net.getLogger().debug("[DarkCloud::Debug] " + requestType + " request from " +
+    						sock.getRemoteSocketAddress());
+                    } else {
+    					net.getLogger().info("[DarkCloud::Info] " + requestType + " request from " +
+    						sock.getRemoteSocketAddress());
+                    }
 					
 					methodFound = true;
 					Response resp = (Response) methods[i].invoke(null, (Request) req);

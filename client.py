@@ -6,6 +6,7 @@ import hashlib
 import socket
 import ssl
 import sys
+import xml.dom.minidom
 
 class Request:
 	def __init__ (self, reqtype, content=None, fields=None, seqnum=1):
@@ -86,12 +87,12 @@ def main():
 		req = Request(reqtype="PING")
 	elif config['request'].lower() == 'put':
 		if not 'localfile' in config:
-			print "PUT method used, but no local file was specified"
+			print ("PUT method used, but no local file was specified")
 			usage()
 			return 1
 
 		if not 'remotefile' in config:
-			print "PUT method used, but no remote file name was specified"
+			print ("PUT method used, but no remote file name was specified")
 			usage()
 			return 1
 
@@ -109,7 +110,7 @@ def main():
 		)
 	elif config['request'].lower() == 'get':
 		if not 'remotefile' in config:
-			print "GET method used, but no remote file name was specified"
+			print ("GET method used, but no remote file name was specified")
 			usage()
 			return 1
 
@@ -126,9 +127,35 @@ def main():
 	fs = sock.makefile()
 	fs.readline()
 	fs.readline()
-	print fs.read()
+	resp = fs.read()
 	fs.close()
 	sock.close()
+
+	document = xml.dom.minidom.parseString(resp)
+
+	if len(document.getElementsByTagName("response")) == 0:
+		sys.stderr.write ("The node sent an invalid response")
+		return 1
+
+	response = document.getElementsByTagName("response")[0]
+	resptype = response.getAttribute("type")
+
+	if not resptype:
+		sys.stderr.write ("The node sent an invalid response")
+		return 1
+
+	if resptype.lower() == 'error':
+		sys.stderr.write (document.getElementsByTagName("content")[0].firstChild.nodeValue)
+		return 1
+
+	if resptype.lower() == 'ack':
+		if config['request'].lower() == 'ping':
+			print ("The node at %s:%d is alive" % (config['host'], config['port']))
+		elif config['request'].lower() == 'put':
+			print ("The file %s has been successfully saved on the network as %s" % (config['localfile'], config['remotefile']))
+		elif config['request'].lower() == 'get':
+			filetag = document.getElementsByTagName("file")[0]
+			sys.stdout.write (base64.b64decode(filetag.firstChild.wholeText))
 
 if __name__ == "__main__":
      main()

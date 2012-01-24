@@ -125,4 +125,11 @@ public class Request extends Message {
 		
 		return req;
 	}
+    
+    /**
+     * @return The sequence number for this request
+     */
+	public int getSequence() {
+        return seqNum;
+	}
 }

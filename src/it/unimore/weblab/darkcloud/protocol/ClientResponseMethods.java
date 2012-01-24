@@ -113,7 +113,7 @@ public abstract class ClientResponseMethods extends ResponseMethods {
 			DarkCloud.getInstance().getLogger().warn("[DarkCloud::Warning] No server nodes available at the moment, try again later");
 			return (Response) new Response(ResponseType.ERROR).setContent("No server nodes available at the moment, try again later");
 		}
-		
+		        
         /// SERVER PUT REQUEST START
         
 		SecretKey key = null;
@@ -162,6 +162,10 @@ public abstract class ClientResponseMethods extends ResponseMethods {
 		}
         /// SERVER PUT REQUEST END
 		
+		DarkCloud.getInstance().getLogger().info("[DarkCloud::Request] {SequenceNum " + req.getSequence() +
+			"} {Type PUT} {Filename " + name +
+			"} {Checksum " + my_checksum + "}");
+        
 		return resp;
 	}
     
@@ -282,6 +286,9 @@ public abstract class ClientResponseMethods extends ResponseMethods {
                 
     			resp = servresp;
 			}
+            
+    		DarkCloud.getInstance().getLogger().info("[DarkCloud::Request] {SequenceNum " + req.getSequence() +
+    			"} {Type GET} {Filename " + name + "}");
             
 			return resp;
 		} catch (Exception e) {

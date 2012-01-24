@@ -63,7 +63,7 @@ class NodeChecker extends Thread {
 			}
 			
 			long pingTime = System.currentTimeMillis() - startTime;
-			net.getLogger().info("[DarkCloud::Info] The node at " + netnode.getName() + ":" + netnode.getPort() + " is alive " +
+			net.getLogger().debug("[DarkCloud::Debug] The node at " + netnode.getName() + ":" + netnode.getPort() + " is alive " +
 				"{PingTimeMsec " + pingTime + "}");
 				
 			net.getServerNodes().get(nodeid).setAlive(true);
@@ -76,7 +76,7 @@ class NodeChecker extends Thread {
 				net.getClientNodes().get(nodeid).setAlive(false);
 			}
 			
-			net.getLogger().warn("[DarkCloud::Warning] The " + netnode.getType().toString() + " node at " +
+			net.getLogger().debug("[DarkCloud::Warning] The " + netnode.getType().toString() + " node at " +
 				netnode.getName() + ":" + netnode.getPort() + " cannot be contacted: " + StackTraceUtil.getStackTrace(e));
 		}
 	}

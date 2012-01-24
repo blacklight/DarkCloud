@@ -123,4 +123,11 @@ public class Response extends Message {
 		
 		return res;
 	}
+    
+    /**
+     * @return The sequence number for this response
+     */
+	public int getSequence() {
+        return seqNum;
+	}
 }

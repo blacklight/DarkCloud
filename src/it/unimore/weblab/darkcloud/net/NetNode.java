@@ -238,6 +238,7 @@ public abstract class NetNode {
 	public void storeNode() throws SQLException
 	{
 		Db db = DarkCloud.getInstance().getDb();
+        System.out.println("***** LISTEN PORT: " + listenPort);
 		Tuple nodeData = new Tuple().
 			setField("nodeid", DarkCloud.getNodeKey(hostname, listenPort)).
 			setField("pubkey", (pubKey == null) ? null : CryptUtil.pubKeyToString(pubKey)).

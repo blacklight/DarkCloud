@@ -124,6 +124,10 @@ public abstract class ServerResponseMethods extends ResponseMethods {
 			DarkCloud.getInstance().getLogger().warn("[DarkCloud::Warning] Wrong checksum - The file you attempted to sent was corrupted, try again");
 			return (Response) new Response(ResponseType.ERROR).setContent("Wrong checksum - The file you attempted to sent was corrupted, try again");
 		}
+        
+		DarkCloud.getInstance().getLogger().info("[DarkCloud::Request] {SequenceNum " + req.getSequence() +
+			"} {Type PUT} {Filename " + name +
+			"} {Checksum " + my_checksum + "} {Uploader " + nodeid + "}");
 		
 		/// SAVE THE FILE TO DB START
 		try {
@@ -203,6 +207,10 @@ public abstract class ServerResponseMethods extends ResponseMethods {
         String uploader = row.get(4);
         String modifiedby = row.get(5);
             
+		DarkCloud.getInstance().getLogger().info("[DarkCloud::Request] {SequenceNum " + req.getSequence() +
+			"} {Type GET} {Filename " + name +
+			"} {Checksum " + checksum + "} {Uploader " + uploader + "}");
+        
         return (Response) new Response(ResponseType.ACK).
         	appendField(new Field("file").
         		setAttribute("checksum", checksum).
