@@ -19,21 +19,28 @@ import it.unimore.weblab.darkcloud.util.CryptUtil;
 import it.unimore.weblab.darkcloud.util.StackTraceUtil;
 
 public abstract class ClientResponseMethods extends ResponseMethods {
+	
+	/////////////////////////////////////////////////////////////////////////////PUT///////////////////////////////////////////////////////////////////////////////////////
+	
 	public static Response put(Request req)
 	{
 		/// REQUEST CHECK START
+		//recupera il campo che indica il file
 		Field file = req.getField("file");
 		
+		//controlla che non sia null
 		if (file == null)
 		{
 			DarkCloud.getInstance().getLogger().warn("[DarkCloud::Warning] Invalid put request: No file property found");
 			return (Response) new Response(ResponseType.ERROR).setContent("Invalid put request: No file property found");
 		}
 		
+		//legge il nome del file
 		String name = file.getAttribute("name");
 		boolean hasName = false;
 		
 		if (name != null) {
+			//toglie gli spazi bianchi prima e dopo il nome
 			name = name.trim();
 			
 			if (!name.isEmpty()) {
@@ -41,12 +48,15 @@ public abstract class ClientResponseMethods extends ResponseMethods {
 			}
 		}
 		
+		//errore restituito se non c'è un nome
 		if (!hasName)
 		{
 			DarkCloud.getInstance().getLogger().warn("[DarkCloud::Warning] Invalid put request: The file property has no name field");
 			return (Response) new Response(ResponseType.ERROR).setContent("The file property has no name field");
 		}
 		
+		//prende l'attributo del file "encoding" ??? si vede che fabio vuole specificare nel caricamento del file o cmq nell'astrazzione superiore
+		//la codifica da usare sul file
 		String encoding = file.getAttribute("encoding");
 		boolean hasEncoding = false;
 		
@@ -70,15 +80,21 @@ public abstract class ClientResponseMethods extends ResponseMethods {
 			return (Response) new Response(ResponseType.ERROR).setContent("No file content was specified");
 		}
 		
+		//recupera il contenuto del file come una stringa 
 		String fileContent = file.getContent();
+		int fileDimension=(int) file.getContent().length();
+		//crea l'array per caricare i byte del dato
         byte[] contentBytes = null;
 		
 		if (encoding.equalsIgnoreCase("base64")) {
+			//se il contenuto del file è criptato decodifica la stringa e lo salva nell'array di byte
 			contentBytes = Base64.decodeBase64(fileContent);
 		} else {
+			//se il file non è criptato copia direttamente il contenuto nell'array ! 
 			contentBytes = file.getContent().getBytes();
 		}
         
+		//legge il checksum
 		String your_checksum = file.getAttribute("checksum");
 		boolean hasChecksum = false;
 		
@@ -96,8 +112,10 @@ public abstract class ClientResponseMethods extends ResponseMethods {
 			return (Response) new Response(ResponseType.ERROR).setContent("No checksum was provided for this file");
 		}
 		
+		//calcolo il mio checksum 
 		String my_checksum = DigestUtils.md5Hex(contentBytes);
 		
+		//lo confronto con quello del file
 		if (!my_checksum.equalsIgnoreCase(your_checksum))
 		{
 			DarkCloud.getInstance().getLogger().warn("[DarkCloud::Warning] Wrong checksum - The file you attempted to sent was corrupted, try again");
@@ -106,13 +124,21 @@ public abstract class ClientResponseMethods extends ResponseMethods {
 		
 		/// REQUEST CHECK END
 		
+		//metto in una struttura i server attivi con il loro riferimento
 		HashMap<String, NetNode> aliveServerNodes = DarkCloud.getInstance().getAliveServerNodes();
 		
+		
+		//se la lista non è vuota
 		if (aliveServerNodes.isEmpty())
 		{
 			DarkCloud.getInstance().getLogger().warn("[DarkCloud::Warning] No server nodes available at the moment, try again later");
 			return (Response) new Response(ResponseType.ERROR).setContent("No server nodes available at the moment, try again later");
 		}
+		
+		//conto quanti server attivi ci sono
+		int nServer = aliveServerNodes.size();
+		int filefragmentSize=fileDimension/nServer;
+		
 		        
         /// SERVER PUT REQUEST START
         
@@ -120,55 +146,84 @@ public abstract class ClientResponseMethods extends ResponseMethods {
         String encryptedContent = null;
         
         // Generate a symmetric encryption key for the file
+        
         try {
+        	//genero una chiave
             key = CryptUtil.generateSymmetricKey();
+            //cripto tutti i byte del file ora il mio contenuto informativo è in encryptedContent 
             encryptedContent = Base64.encodeBase64String(CryptUtil.encrypt(contentBytes, key, "AES"));
 		} catch (Exception e1) {
 			DarkCloud.getInstance().getLogger().error("[DarkCloud::Error] " + StackTraceUtil.getStackTrace(e1));
 			return (Response) new Response(ResponseType.ERROR).setContent("[DarkCloud::Error] " + StackTraceUtil.getStackTrace(e1));
 		}
         
-		// TODO Implement a more smart algorithm for fetching nodes
-		NetNode server = aliveServerNodes.get(aliveServerNodes.keySet().toArray()[0]);
-		Response resp = null;
+        String[] fragment = new String[nServer];
+        for(int i=0;i<nServer;i++){
+        	fragment[i]=encryptedContent.substring(i*filefragmentSize, filefragmentSize);
+        }
         
-		try {
-            req.getField("file").setContent(encryptedContent);
-            //	CryptUtil.decrypt(Base64.decodeBase64(encryptedContent), key, "AES")));
-            req.getField("file").setAttribute("checksum", DigestUtils.md5Hex(Base64.decodeBase64(encryptedContent)));
-            resp = server.send(req);
-            
-            if (resp.getType() == ResponseType.ACK)
-            {
-                String keystring = Base64.encodeBase64String(
+		// TODO Implement a more smart algorithm for fetching nodes
+        
+        for(int i=0; i < nServer; i++){
+       
+        	//prende il primo server attivo , invece io devo metterci tutti i server a cui mandare un frammento !!! ^_^
+        	NetNode server = aliveServerNodes.get(aliveServerNodes.keySet().toArray()[i]);
+        	Response resp = null;
+
+        	try {
+        		//io client modifico la "richiesta" ricevuta dallo script inserendogli il contenuto effettivo del file criptato 
+        		req.getField("file").setContent(fragment[i]);
+        		//	CryptUtil.decrypt(Base64.decodeBase64(encryptedContent), key, "AES")));
+        		//sostituisco nella "richiesta" anche il checksum
+        		req.getField("file").setAttribute("checksum", DigestUtils.md5Hex(Base64.decodeBase64(fragment[i])));
+        		//invio un tipo "risposta" a server (che è il primo della lista) dando come oggetto la "richiesta" dello script modificata !!! ^_^
+        		resp = server.send(req);
+
+        		//il server risp che va tutto bene
+        		if (resp.getType() == ResponseType.ACK)
+        		{
+        			//inserisce nel db locale la voce del frammento
+        			DarkCloud.getInstance().getDb().insert(Table.FILEFRAGMENT, new Tuple().
+        					setField("name", name).
+        					setField("fragmentid", new Integer(i)).
+        					setField("checksum", my_checksum).
+        					setField("nodeid", DarkCloud.getNodeKey(server.getName(), server.getPort())));
+        		}
+        	} catch (Exception e) {
+        		DarkCloud.getInstance().getLogger().error("[DarkCloud::Error] " + StackTraceUtil.getStackTrace(e));
+        		return (Response) new Response(ResponseType.ERROR).setContent("[DarkCloud::Error] " + StackTraceUtil.getStackTrace(e));
+        	}
+
+        }
+        
+        try{
+        	//genero la chiave locale e la salvo nel db
+        	String keystring = Base64.encodeBase64String(
                 	CryptUtil.encrypt(key.getEncoded(), DarkCloud.getInstance().getPublicKey(), "RSA/ECB/PKCS1Padding"));
-                
+        	 //inserisce nel db locale la voce del file
             	DarkCloud.getInstance().getDb().insert(Table.FILE, new Tuple().
             		setField("name", name).
             		setField("key", keystring).
             		setField("checksum", my_checksum).
             		setField("creationtime", new Date().getTime()).
             		setField("modifytime", new Date().getTime()));
-                
-            	DarkCloud.getInstance().getDb().insert(Table.FILEFRAGMENT, new Tuple().
-            		setField("name", name).
-            		setField("fragmentid", new Integer(0)).
-            		setField("checksum", my_checksum).
-            		setField("nodeid", DarkCloud.getNodeKey(server.getName(), server.getPort())));
-            }
-		} catch (Exception e) {
+            	
+        }catch (Exception e) {
 			DarkCloud.getInstance().getLogger().error("[DarkCloud::Error] " + StackTraceUtil.getStackTrace(e));
 			return (Response) new Response(ResponseType.ERROR).setContent("[DarkCloud::Error] " + StackTraceUtil.getStackTrace(e));
 		}
+        
         /// SERVER PUT REQUEST END
 		
 		DarkCloud.getInstance().getLogger().info("[DarkCloud::Request] {SequenceNum " + req.getSequence() +
 			"} {Type PUT} {Filename " + name +
 			"} {Checksum " + my_checksum + "}");
-        
-		return resp;
+		Response resp1 = null;
+		return resp1;
 	}
     
+	///////////////////////////////////////////////////////////////////////////////GET/////////////////////////////////////////////////////////////////////////////////
+	
 	public static Response get(Request req)
 	{
 		/// REQUEST CHECK START
