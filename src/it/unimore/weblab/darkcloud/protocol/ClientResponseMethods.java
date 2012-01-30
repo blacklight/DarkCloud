@@ -93,9 +93,6 @@ public abstract class ClientResponseMethods extends ResponseMethods {
 			contentBytes = file.getContent().getBytes();
 		}
         
-        // This fixes file size buggy computation in r72
-		int fileDimension = contentBytes.length;
-        
 		//legge il checksum
 		String your_checksum = file.getAttribute("checksum");
 		boolean hasChecksum = false;
@@ -129,23 +126,18 @@ public abstract class ClientResponseMethods extends ResponseMethods {
 		//metto in una struttura i server attivi con il loro riferimento
 		HashMap<String, NetNode> aliveServerNodes = DarkCloud.getInstance().getAliveServerNodes();
 		
-		
 		//se la lista non � vuota
 		if (aliveServerNodes.isEmpty())
 		{
 			DarkCloud.getInstance().getLogger().warn("[DarkCloud::Warning] No server nodes available at the moment, try again later");
 			return (Response) new Response(ResponseType.ERROR).setContent("No server nodes available at the moment, try again later");
-		}
-		
-		//conto quanti server attivi ci sono
-		int nServer = aliveServerNodes.size();
-		int filefragmentSize=fileDimension/nServer;
-		
+		}		
 		        
         /// SERVER PUT REQUEST START
         
 		SecretKey key = null;
         String encryptedContent = null;
+        int fileDimension = 0;
         
         // Generate a symmetric encryption key for the file
         
@@ -154,10 +146,15 @@ public abstract class ClientResponseMethods extends ResponseMethods {
             key = CryptUtil.generateSymmetricKey();
             //cripto tutti i byte del file ora il mio contenuto informativo � in encryptedContent 
             encryptedContent = Base64.encodeBase64String(CryptUtil.encrypt(contentBytes, key, "AES"));
+    		fileDimension = encryptedContent.length();
 		} catch (Exception e1) {
 			DarkCloud.getInstance().getLogger().error("[DarkCloud::Error] " + StackTraceUtil.getStackTrace(e1));
 			return (Response) new Response(ResponseType.ERROR).setContent("[DarkCloud::Error] " + StackTraceUtil.getStackTrace(e1));
 		}
+        
+		//conto quanti server attivi ci sono
+		int nServer = aliveServerNodes.size();
+		int filefragmentSize=fileDimension/nServer;
         
         String[] fragment = new String[nServer];
         for(int i=0;i<nServer;i++){
@@ -165,19 +162,19 @@ public abstract class ClientResponseMethods extends ResponseMethods {
         }
         
 		// TODO Implement a more smart algorithm for fetching nodes
+        Response resp = null;
         
         for(int i=0; i < nServer; i++){
-       
         	//prende il primo server attivo , invece io devo metterci tutti i server a cui mandare un frammento !!! ^_^
         	NetNode server = aliveServerNodes.get(aliveServerNodes.keySet().toArray()[i]);
-        	Response resp = null;
 
         	try {
         		//io client modifico la "richiesta" ricevuta dallo script inserendogli il contenuto effettivo del file criptato 
         		req.getField("file").setContent(fragment[i]);
-        		//	CryptUtil.decrypt(Base64.decodeBase64(encryptedContent), key, "AES")));
+                
         		//sostituisco nella "richiesta" anche il checksum
         		req.getField("file").setAttribute("checksum", DigestUtils.md5Hex(Base64.decodeBase64(fragment[i])));
+                
         		//invio un tipo "risposta" a server (che � il primo della lista) dando come oggetto la "richiesta" dello script modificata !!! ^_^
         		resp = server.send(req);
 
@@ -220,8 +217,8 @@ public abstract class ClientResponseMethods extends ResponseMethods {
 		DarkCloud.getInstance().getLogger().info("[DarkCloud::Request] {SequenceNum " + req.getSequence() +
 			"} {Type PUT} {Filename " + name +
 			"} {Checksum " + my_checksum + "}");
-		Response resp1 = null;
-		return resp1;
+        
+		return resp;
 	}
     
 	///////////////////////////////////////////////////////////////////////////////GET/////////////////////////////////////////////////////////////////////////////////
