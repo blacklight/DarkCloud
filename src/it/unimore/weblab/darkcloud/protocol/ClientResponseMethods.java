@@ -48,7 +48,7 @@ public abstract class ClientResponseMethods extends ResponseMethods {
 			}
 		}
 		
-		//errore restituito se non c'è un nome
+		//errore restituito se non c'ï¿½ un nome
 		if (!hasName)
 		{
 			DarkCloud.getInstance().getLogger().warn("[DarkCloud::Warning] Invalid put request: The file property has no name field");
@@ -82,17 +82,19 @@ public abstract class ClientResponseMethods extends ResponseMethods {
 		
 		//recupera il contenuto del file come una stringa 
 		String fileContent = file.getContent();
-		int fileDimension=(int) file.getContent().length();
 		//crea l'array per caricare i byte del dato
         byte[] contentBytes = null;
 		
 		if (encoding.equalsIgnoreCase("base64")) {
-			//se il contenuto del file è criptato decodifica la stringa e lo salva nell'array di byte
+			//se il contenuto del file ï¿½ criptato decodifica la stringa e lo salva nell'array di byte
 			contentBytes = Base64.decodeBase64(fileContent);
 		} else {
-			//se il file non è criptato copia direttamente il contenuto nell'array ! 
+			//se il file non ï¿½ criptato copia direttamente il contenuto nell'array ! 
 			contentBytes = file.getContent().getBytes();
 		}
+        
+        // This fixes file size buggy computation in r72
+		int fileDimension = contentBytes.length;
         
 		//legge il checksum
 		String your_checksum = file.getAttribute("checksum");
@@ -128,7 +130,7 @@ public abstract class ClientResponseMethods extends ResponseMethods {
 		HashMap<String, NetNode> aliveServerNodes = DarkCloud.getInstance().getAliveServerNodes();
 		
 		
-		//se la lista non è vuota
+		//se la lista non ï¿½ vuota
 		if (aliveServerNodes.isEmpty())
 		{
 			DarkCloud.getInstance().getLogger().warn("[DarkCloud::Warning] No server nodes available at the moment, try again later");
@@ -150,7 +152,7 @@ public abstract class ClientResponseMethods extends ResponseMethods {
         try {
         	//genero una chiave
             key = CryptUtil.generateSymmetricKey();
-            //cripto tutti i byte del file ora il mio contenuto informativo è in encryptedContent 
+            //cripto tutti i byte del file ora il mio contenuto informativo ï¿½ in encryptedContent 
             encryptedContent = Base64.encodeBase64String(CryptUtil.encrypt(contentBytes, key, "AES"));
 		} catch (Exception e1) {
 			DarkCloud.getInstance().getLogger().error("[DarkCloud::Error] " + StackTraceUtil.getStackTrace(e1));
@@ -176,7 +178,7 @@ public abstract class ClientResponseMethods extends ResponseMethods {
         		//	CryptUtil.decrypt(Base64.decodeBase64(encryptedContent), key, "AES")));
         		//sostituisco nella "richiesta" anche il checksum
         		req.getField("file").setAttribute("checksum", DigestUtils.md5Hex(Base64.decodeBase64(fragment[i])));
-        		//invio un tipo "risposta" a server (che è il primo della lista) dando come oggetto la "richiesta" dello script modificata !!! ^_^
+        		//invio un tipo "risposta" a server (che ï¿½ il primo della lista) dando come oggetto la "richiesta" dello script modificata !!! ^_^
         		resp = server.send(req);
 
         		//il server risp che va tutto bene
