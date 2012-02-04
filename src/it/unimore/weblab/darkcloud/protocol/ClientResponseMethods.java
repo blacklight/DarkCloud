@@ -24,6 +24,7 @@ public abstract class ClientResponseMethods extends ResponseMethods {
 	
 	public static Response put(Request req)
 	{
+		DarkCloud.getInstance().getLogger().info("inizio procedura put client");
 		/// REQUEST CHECK START
 		//recupera il campo che indica il file
 		Field file = req.getField("file");
@@ -48,7 +49,7 @@ public abstract class ClientResponseMethods extends ResponseMethods {
 			}
 		}
 		
-		//errore restituito se non c'� un nome
+		//errore restituito se non c'e un nome
 		if (!hasName)
 		{
 			DarkCloud.getInstance().getLogger().warn("[DarkCloud::Warning] Invalid put request: The file property has no name field");
@@ -86,10 +87,10 @@ public abstract class ClientResponseMethods extends ResponseMethods {
         byte[] contentBytes = null;
 		
 		if (encoding.equalsIgnoreCase("base64")) {
-			//se il contenuto del file � criptato decodifica la stringa e lo salva nell'array di byte
+			//se il contenuto del file e criptato decodifica la stringa e lo salva nell'array di byte
 			contentBytes = Base64.decodeBase64(fileContent);
 		} else {
-			//se il file non � criptato copia direttamente il contenuto nell'array ! 
+			//se il file non e criptato copia direttamente il contenuto nell'array ! 
 			contentBytes = file.getContent().getBytes();
 		}
         
@@ -126,7 +127,7 @@ public abstract class ClientResponseMethods extends ResponseMethods {
 		//metto in una struttura i server attivi con il loro riferimento
 		HashMap<String, NetNode> aliveServerNodes = DarkCloud.getInstance().getAliveServerNodes();
 		
-		//se la lista non � vuota
+		//se la lista non e vuota
 		if (aliveServerNodes.isEmpty())
 		{
 			DarkCloud.getInstance().getLogger().warn("[DarkCloud::Warning] No server nodes available at the moment, try again later");
@@ -147,6 +148,7 @@ public abstract class ClientResponseMethods extends ResponseMethods {
             //cripto tutti i byte del file ora il mio contenuto informativo � in encryptedContent 
             encryptedContent = Base64.encodeBase64String(CryptUtil.encrypt(contentBytes, key, "AES"));
     		fileDimension = encryptedContent.length();
+    		DarkCloud.getInstance().getLogger().info("la dimensione del file è "+fileDimension);
 		} catch (Exception e1) {
 			DarkCloud.getInstance().getLogger().error("[DarkCloud::Error] " + StackTraceUtil.getStackTrace(e1));
 			return (Response) new Response(ResponseType.ERROR).setContent("[DarkCloud::Error] " + StackTraceUtil.getStackTrace(e1));
@@ -154,7 +156,9 @@ public abstract class ClientResponseMethods extends ResponseMethods {
         
 		//conto quanti server attivi ci sono
 		int nServer = aliveServerNodes.size();
+		DarkCloud.getInstance().getLogger().info("i server attivi sono"+nServer);
 		int filefragmentSize=fileDimension/nServer;
+		DarkCloud.getInstance().getLogger().info("quindi la grandezza dei pezzi sarà "+filefragmentSize);
         
         String[] fragment = new String[nServer];
         for(int i=0;i<nServer;i++){
@@ -175,7 +179,7 @@ public abstract class ClientResponseMethods extends ResponseMethods {
         		//sostituisco nella "richiesta" anche il checksum
         		req.getField("file").setAttribute("checksum", DigestUtils.md5Hex(Base64.decodeBase64(fragment[i])));
                 
-        		//invio un tipo "risposta" a server (che � il primo della lista) dando come oggetto la "richiesta" dello script modificata !!! ^_^
+        		//invio un tipo "risposta" a server (che e il primo della lista) dando come oggetto la "richiesta" dello script modificata !!! ^_^
         		resp = server.send(req);
 
         		//il server risp che va tutto bene
@@ -217,7 +221,7 @@ public abstract class ClientResponseMethods extends ResponseMethods {
 		DarkCloud.getInstance().getLogger().info("[DarkCloud::Request] {SequenceNum " + req.getSequence() +
 			"} {Type PUT} {Filename " + name +
 			"} {Checksum " + my_checksum + "}");
-        
+		DarkCloud.getInstance().getLogger().info("fine procedura put client");
 		return resp;
 	}
     
@@ -226,14 +230,17 @@ public abstract class ClientResponseMethods extends ResponseMethods {
 	public static Response get(Request req)
 	{
 		/// REQUEST CHECK START
+		//recupera il nome del file originale
 		Field file = req.getField("file");
 		
+		//controlla se il campo file è scritto
 		if (file == null)
 		{
 			DarkCloud.getInstance().getLogger().warn("[DarkCloud::Warning] Invalid put request: No file property found");
 			return (Response) new Response(ResponseType.ERROR).setContent("Invalid put request: No file property found");
 		}
 		
+		//legge il nome
 		String name = file.getAttribute("name");
 		boolean hasName = false;
 		
@@ -256,6 +263,7 @@ public abstract class ClientResponseMethods extends ResponseMethods {
         try {
             // TODO In a fragment replication scenario, count the number of fragments for each file
         	// through a GROUP BY query, then check for each fragment how many nodes have that fragment
+        	//nella lista result raccoglie già i dati di TUTTI i frammenti con il nome NAME
 			result = DarkCloud.getInstance().getDb().select(
 				"SELECT key, fragmentid, frag.checksum, nodeid " +
 				"FROM " + Table.FILE + " f JOIN " + Table.FILEFRAGMENT + " frag " +
@@ -267,11 +275,20 @@ public abstract class ClientResponseMethods extends ResponseMethods {
     			return (Response) new Response(ResponseType.ERROR).setContent("No such file or directory");
 			}
             
-            Response resp = null;
-            
+			int nResult = result.size();
+			DarkCloud.getInstance().getLogger().info("GET: abbiamo "+nResult+" frammenti di file");
+			
+			String completeFile =new String();
+			
+           // Response resp = null;
+            //ciclo che si ripete per ogni elemento dell array result usando row come variabile temporanea
+            //result e l array che contiene tutti i dati dei frammenti quindi questo ciclo 
+            //ripete il suo codice per ogni frammento
 			for (ArrayList<String> row : result)
 			{
+				//legge il campo che contiene l'indirizzo del server
                 String nodeid = row.get(3);
+                //cerca di collegarsi a quel server
                 NetNode node = DarkCloud.getInstance().getAliveServerNodes().get(nodeid);
                 
                 if (node == null) {
@@ -281,17 +298,22 @@ public abstract class ClientResponseMethods extends ResponseMethods {
                 
                 //int fragmentid = Integer.parseInt(row.get(1));
                 //String checksum = row.get(2);
+                
+                //calcola la chiave tramite il primo campo del record del frammento
                 SecretKey filekey = (SecretKey) CryptUtil.secretKeyFromString(
                     Base64.encodeBase64String(
                 	    CryptUtil.decrypt(Base64.decodeBase64(row.get(0)),
                     	    DarkCloud.getInstance().getPrivateKey(), "RSA/ECB/PKCS1Padding")));
                 
+                //crea una nuova richiesta di tipo get inserendo i dettagli del file
                 Request getreq = (Request) new Request(RequestType.GET).
                 	appendField(new Field("file").
                 		appendAttribute("name", name));
                 
+                //crea una risposta e gli attribuisce quello che viene restituito all'invio della richiesta prima creata
     			Response servresp = node.send(getreq);
                 
+    			//se e una tisposta positiva recupera il contenuto file
     			if (servresp.getType() == ResponseType.ACK)
     			{
                     file = servresp.getField("file");
@@ -317,11 +339,12 @@ public abstract class ClientResponseMethods extends ResponseMethods {
                         return (Response) new Response(ResponseType.ERROR).setContent("The server returned an invalid response");
                     }
                     
-                    String fileContent = file.getContent();
+                    //legge il contenuto del file  
+                    byte[] fileContentByte = file.getContent().getBytes();
                     boolean hasContent = false;
                     
-                    if (fileContent != null) {
-                    	if (!fileContent.isEmpty()) {
+                    if (fileContentByte != null) {
+                    	if (fileContentByte.length > 0) {
                     		hasContent = true;
                     	}
                     }
@@ -331,20 +354,30 @@ public abstract class ClientResponseMethods extends ResponseMethods {
                         return (Response) new Response(ResponseType.ERROR).setContent("The server returned an invalid response");
                     }
                     
-                    fileContent = Base64.encodeBase64String(
-                    	CryptUtil.decrypt(
-                    		Base64.decodeBase64(fileContent), filekey, "AES"));
+                    int lenght =fileContentByte.length;
+                    String fileContent= null;
+                    for(int i=0;i<lenght;i++){
+                    	fileContent=fileContent+fileContentByte[i];
+                    }
                     
-                    servresp.getField("file").setContent(fileContent);
+                    //decripta il contenuto 
+                    fileContent = Base64.encodeBase64String(CryptUtil.decrypt(Base64.decodeBase64(fileContent), filekey, "AES"));
+                    
+                    
+                    //rimette nella risposta il contenuto elaborato che verra poi restituito
+                    completeFile=completeFile+fileContent;
     			}
                 
-    			resp = servresp;
+    			
 			}
-            
+			Response respNew =new Response(null);
+			respNew.getField("file").setContent(completeFile);
+			
     		DarkCloud.getInstance().getLogger().info("[DarkCloud::Request] {SequenceNum " + req.getSequence() +
     			"} {Type GET} {Filename " + name + "}");
             
-			return resp;
+    		//restituisce il risultato
+			return respNew;
 		} catch (Exception e) {
 			DarkCloud.getInstance().getLogger().warn("[DarkCloud::ERROR] " + StackTraceUtil.getStackTrace(e));
 			return (Response) new Response(ResponseType.ERROR).setContent(StackTraceUtil.getStackTrace(e));
