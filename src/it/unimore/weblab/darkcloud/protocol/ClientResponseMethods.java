@@ -203,6 +203,10 @@ public abstract class ClientResponseMethods extends ResponseMethods {
         	//genero la chiave locale e la salvo nel db
         	String keystring = Base64.encodeBase64String(
                 	CryptUtil.encrypt(key.getEncoded(), DarkCloud.getInstance().getPublicKey(), "RSA/ECB/PKCS1Padding"));
+        	
+        	DarkCloud.getInstance().getLogger().info("la key è :"+key);
+        	DarkCloud.getInstance().getLogger().info("la key criptata è :"+keystring);
+        	
         	 //inserisce nel db locale la voce del file
             	DarkCloud.getInstance().getDb().insert(Table.FILE, new Tuple().
             		setField("name", name).
@@ -278,14 +282,25 @@ public abstract class ClientResponseMethods extends ResponseMethods {
 			int nResult = result.size();
 			DarkCloud.getInstance().getLogger().info("GET: abbiamo "+nResult+" frammenti di file");
 			
-			String completeFile =new String();
 			
-           // Response resp = null;
+			DarkCloud.getInstance().getLogger().info("inizio a decriptare la keystring :"+result.get(0).get(0));
+			SecretKey filekey = (SecretKey) CryptUtil.secretKeyFromString(
+                    Base64.encodeBase64String(
+                	    CryptUtil.decrypt(Base64.decodeBase64(result.get(0).get(0)),
+                    	    DarkCloud.getInstance().getPrivateKey(), "RSA/ECB/PKCS1Padding")));
+			
+			DarkCloud.getInstance().getLogger().info("ho decriptato la chiave , è :" +filekey);
+			Response servresp = null;
+			String fileContent =null;
+			String completeFile =null;
+			
+			// Response resp = null;
             //ciclo che si ripete per ogni elemento dell array result usando row come variabile temporanea
             //result e l array che contiene tutti i dati dei frammenti quindi questo ciclo 
             //ripete il suo codice per ogni frammento
 			for (ArrayList<String> row : result)
 			{
+				DarkCloud.getInstance().getLogger().info("stiamo lavorando il frammento numero :"+row);
 				//legge il campo che contiene l'indirizzo del server
                 String nodeid = row.get(3);
                 //cerca di collegarsi a quel server
@@ -300,10 +315,7 @@ public abstract class ClientResponseMethods extends ResponseMethods {
                 //String checksum = row.get(2);
                 
                 //calcola la chiave tramite il primo campo del record del frammento
-                SecretKey filekey = (SecretKey) CryptUtil.secretKeyFromString(
-                    Base64.encodeBase64String(
-                	    CryptUtil.decrypt(Base64.decodeBase64(row.get(0)),
-                    	    DarkCloud.getInstance().getPrivateKey(), "RSA/ECB/PKCS1Padding")));
+                
                 
                 //crea una nuova richiesta di tipo get inserendo i dettagli del file
                 Request getreq = (Request) new Request(RequestType.GET).
@@ -311,7 +323,7 @@ public abstract class ClientResponseMethods extends ResponseMethods {
                 		appendAttribute("name", name));
                 
                 //crea una risposta e gli attribuisce quello che viene restituito all'invio della richiesta prima creata
-    			Response servresp = node.send(getreq);
+    			servresp = node.send(getreq);
                 
     			//se e una tisposta positiva recupera il contenuto file
     			if (servresp.getType() == ResponseType.ACK)
@@ -340,11 +352,10 @@ public abstract class ClientResponseMethods extends ResponseMethods {
                     }
                     
                     //legge il contenuto del file  
-                    byte[] fileContentByte = file.getContent().getBytes();
+                    fileContent= file.getContent();
                     boolean hasContent = false;
-                    
-                    if (fileContentByte != null) {
-                    	if (fileContentByte.length > 0) {
+                    if (fileContent != null) {
+                    	if (!fileContent.isEmpty()) {
                     		hasContent = true;
                     	}
                     }
@@ -354,14 +365,9 @@ public abstract class ClientResponseMethods extends ResponseMethods {
                         return (Response) new Response(ResponseType.ERROR).setContent("The server returned an invalid response");
                     }
                     
-                    int lenght =fileContentByte.length;
-                    String fileContent= null;
-                    for(int i=0;i<lenght;i++){
-                    	fileContent=fileContent+fileContentByte[i];
-                    }
+                 
                     
-                    //decripta il contenuto 
-                    fileContent = Base64.encodeBase64String(CryptUtil.decrypt(Base64.decodeBase64(fileContent), filekey, "AES"));
+                    
                     
                     
                     //rimette nella risposta il contenuto elaborato che verra poi restituito
@@ -370,14 +376,15 @@ public abstract class ClientResponseMethods extends ResponseMethods {
                 
     			
 			}
-			Response respNew =new Response(null);
-			respNew.getField("file").setContent(completeFile);
+			//decripta il contenuto 
+			completeFile = Base64.encodeBase64String(CryptUtil.decrypt(Base64.decodeBase64(completeFile), filekey, "AES"));
+			servresp.getField("file").setContent(completeFile);
 			
     		DarkCloud.getInstance().getLogger().info("[DarkCloud::Request] {SequenceNum " + req.getSequence() +
     			"} {Type GET} {Filename " + name + "}");
             
     		//restituisce il risultato
-			return respNew;
+			return servresp;
 		} catch (Exception e) {
 			DarkCloud.getInstance().getLogger().warn("[DarkCloud::ERROR] " + StackTraceUtil.getStackTrace(e));
 			return (Response) new Response(ResponseType.ERROR).setContent(StackTraceUtil.getStackTrace(e));
