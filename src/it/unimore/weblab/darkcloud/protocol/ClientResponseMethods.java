@@ -1,8 +1,10 @@
 package it.unimore.weblab.darkcloud.protocol;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.crypto.SecretKey;
 
@@ -107,7 +109,7 @@ public abstract class ClientResponseMethods extends ResponseMethods {
                 /// REQUEST CHECK END
                 
                 HashMap<String, NetNode> aliveServerNodes = DarkCloud.getInstance().getAliveServerNodes();
-                
+                HashMap<String, NetNode> aliveServerNodes2 = new HashMap<String, NetNode>();
                 if (aliveServerNodes.isEmpty())
                 {
                         DarkCloud.getInstance().getLogger().warn("[DarkCloud::Warning] No server nodes available at the moment, try again later");
@@ -115,6 +117,13 @@ public abstract class ClientResponseMethods extends ResponseMethods {
                 }
                 //Calculate how many alive server we have
                 int nServer = aliveServerNodes.size();
+                //Function for shuffling the order of server to increase security 
+                List<String> keys = new ArrayList<String>(aliveServerNodes.keySet());
+                Collections.shuffle(keys);
+                for (String o : keys) {
+                	aliveServerNodes2.put(o,aliveServerNodes.get(o));
+                }
+
         /// SERVER PUT REQUEST START
         
                 SecretKey key = null;
@@ -139,7 +148,7 @@ public abstract class ClientResponseMethods extends ResponseMethods {
         Response resp = null;    
         for(int i=0;i<nServer;i++){
                 // TODO Implement a more smart algorithm for fetching nodes
-                NetNode server = aliveServerNodes.get(aliveServerNodes.keySet().toArray()[i]);
+                NetNode server = aliveServerNodes2.get(aliveServerNodes2.keySet().toArray()[i]);
                 String fragment_checksum = DigestUtils.md5Hex(Base64.decodeBase64(fragment[i]));
                 try {
             req.getField("file").setContent(fragment[i]);
@@ -227,7 +236,7 @@ public abstract class ClientResponseMethods extends ResponseMethods {
                         }
             Response resp = null;
             Response servresp=null;
-            String fileContent=null;
+            String fileContent="";
             SecretKey filekey = (SecretKey) CryptUtil.secretKeyFromString(
                     Base64.encodeBase64String(
                             CryptUtil.decrypt(Base64.decodeBase64(result.get(0).get(0)),
@@ -236,6 +245,7 @@ public abstract class ClientResponseMethods extends ResponseMethods {
             
                         for (ArrayList<String> row : result)
                         {
+                        	
                 String nodeid = row.get(3);
                 NetNode node = DarkCloud.getInstance().getAliveServerNodes().get(nodeid);
                 
@@ -307,8 +317,8 @@ public abstract class ClientResponseMethods extends ResponseMethods {
                     	DarkCloud.getInstance().getLogger().warn("[DarkCloud::Warning] Wrong checksum - The file fragment you attempted to use was corrupted, try again");
                         return (Response) new Response(ResponseType.ERROR).setContent("Wrong checksum - The file fragment you attempted to use was corrupted, try again");
                     }
-                    
-                    fileContent=fileContent.concat(fileFragment);
+                    fileFragment=fileFragment.trim();
+                    fileContent=fileContent+fileFragment;
                     fileContent=fileContent.trim();
                         }
                         }
