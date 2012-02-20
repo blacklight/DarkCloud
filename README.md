@@ -109,6 +109,27 @@ In that case, the specific configuration lines in that node's
 	darkcloud.nodes.listenport = 17100, 18100
 	darkcloud.nodes.type = server, client
 
+## Move a node from a place to another
+
+A DarkCloud node is identified by:
+
+* The executable JAR file. It is the same for client and server nodes, so it
+  could be a symbolic link shared among all the nodes
+* The **darkcloud.db** database, which stores its information
+* The **darkcloud.conf** file, which stores its configuration
+* The **darkcloud.keystore** file, which stores the trusted keys and
+  certificates for that file
+* The **private.key** and **public.key** files, the pair of RSA keys used by the
+  node to be identified on the network and to decrypt encrypted information
+  addressed to it
+
+If you want to move a node from a place to another, or from a machine to
+another, you just need to move these files. And, of course, if you're moving a
+node to another machine and you still want it to have visibility on the same
+network, modify the darkcloud.conf file, both on the node you're moving and the
+nodes which should have visibility of that node, updating the
+darkcloud.nodes.host entries with the new IP address or hostname.
+
 # Usage
 
 You can start the network (i.e. all the nodes in the **net** directory) by using
