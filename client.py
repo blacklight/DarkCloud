@@ -52,12 +52,12 @@ class Request:
 		return s
 
 def usage():
-	print ("Usage: " + sys.argv[0] + " -h <host> -p <port> -r <request string> [-f <local file>] [-F <remote file>]")
-	print ("Valid requests: ping, put, get")
+	print ("Usage: " + sys.argv[0] + " -h <host> -p <port> -r <request string> [-f <local file>] [-F <remote file>] [-c <client>]")
+	print ("Valid requests: ping, put, get, share")
 
 def main():
 	config = {}
-	optlist, args = getopt.getopt(sys.argv[1:], "f:F:h:p:r:", ["localfile=", "remotefile=", "host=", "port=", "request="])
+	optlist, args = getopt.getopt(sys.argv[1:], "f:F:h:p:r:c:", ["localfile=", "remotefile=", "host=", "port=", "request=", "client="])
 
 	for opt, arg in optlist:
 		if opt in ('-h', '--host'):
@@ -78,6 +78,8 @@ def main():
 			config['localfile'] = arg
 		elif opt in ('-F', '--remotefile'):
 			config['remotefile'] = arg
+		elif opt in ('-c', '--client'):
+			config['client'] = arg
 
 	if not 'host' in config or not 'port' in config or not 'request' in config:
 		usage()
@@ -85,6 +87,23 @@ def main():
 
 	if config['request'].lower() == 'ping':
 		req = Request(reqtype="PING")
+	elif config['request'].lower() == 'share':
+		if not 'client' in config:
+			print("SHARE method used, but no client to share the information was specified")
+			usage()
+			return 1
+
+		if not 'remotefile' in config:
+			print("SHARE method used, but no remote file to share was specified")
+			usage()
+			return 1
+
+		req = Request(reqtype="SHARE",
+			fields={
+				('sharing', 'client'): config['client'],
+				('sharing', 'remotefile'): config['remotefile']
+			}
+		)
 	elif config['request'].lower() == 'put':
 		if not 'localfile' in config:
 			print ("PUT method used, but no local file was specified")
@@ -103,7 +122,7 @@ def main():
 		req = Request(reqtype="PUT",
 			fields={
 				('file', 'encoding'): 'base64',
-				('file', 'name'): config['remotefile'],
+				('file', 'remotefile'): config['remotefile'],
 				('file', 'content'): filecontent,
 				('file', 'checksum'): hashlib.md5(filecontent).hexdigest()
 			}
@@ -151,6 +170,8 @@ def main():
 	if resptype.lower() == 'ack':
 		if config['request'].lower() == 'ping':
 			print ("The node at %s:%d is alive" % (config['host'], config['port']))
+		elif config['request'].lower() == 'share':
+			print ("The file %s has been successfully shared with %s" % (config['remotefile'], config['client']))
 		elif config['request'].lower() == 'put':
 			print ("The file %s has been successfully saved on the network as %s" % (config['localfile'], config['remotefile']))
 		elif config['request'].lower() == 'get':

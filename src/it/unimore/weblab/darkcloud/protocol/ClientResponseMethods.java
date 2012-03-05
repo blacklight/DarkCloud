@@ -1,5 +1,6 @@
 package it.unimore.weblab.darkcloud.protocol;
 
+import java.security.Key;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -354,5 +355,178 @@ public abstract class ClientResponseMethods extends ResponseMethods {
 			DarkCloud.getInstance().getLogger().warn("[DarkCloud::ERROR] " + StackTraceUtil.getStackTrace(e));
 			return (Response) new Response(ResponseType.ERROR).setContent(StackTraceUtil.getStackTrace(e));
 		}
+	}
+	public static Response share(Request req)
+	{
+		Field sharing = req.getField("sharing");
+		if (sharing == null)
+		{
+			DarkCloud.getInstance().getLogger().warn("[DarkCloud::Warning] Invalid share request: The sharing property has no client field");
+			return (Response) new Response(ResponseType.ERROR).setContent("Invalid share request: No field property found");
+		}
+		
+		String client = sharing.getAttribute("client");
+		String remotefile = sharing.getAttribute("remotefile");
+		
+		boolean hasClient = false;
+		if (client != null) {
+			client = client.trim();
+
+			if (!client.isEmpty()) {
+				hasClient = true;
+			}
+		}
+
+		if (!hasClient) {
+			DarkCloud.getInstance().getLogger().warn("[DarkCloud::Warning] Invalid share request: The sharing property has no client field");
+			return (Response) new Response(ResponseType.ERROR).setContent("The sharing property has no client field");
+		}
+		
+		boolean hasFile = false;
+		if (remotefile != null) {
+			remotefile = remotefile.trim();
+
+			if (!remotefile.isEmpty()) {
+				hasFile = true;
+			}
+		}
+
+		if (!hasFile) {
+			DarkCloud.getInstance().getLogger().warn("[DarkCloud::Warning] Invalid share request: The sharing property has no file field");
+			return (Response) new Response(ResponseType.ERROR).setContent("The sharing property has no file field");
+		}
+		
+		DarkCloud.getInstance().getLogger().info("vuoi che servo il cliente "+ client+" e gli passo il file "+remotefile);		
+		ArrayList<ArrayList<String>> file = null;
+		ArrayList<ArrayList<String>> filefragment = null;
+		String keystring="";
+		String nFrag="";
+		NetNode node;
+		Request getreq;
+		try{
+			file = DarkCloud.getInstance().getDb().select(
+				"SELECT name, key, checksum, creationtime " +
+				"FROM " + Table.FILE +
+				"WHERE f.name='" + remotefile + "' " 
+				);
+			filefragment = DarkCloud.getInstance().getDb().select(
+				"SELECT fragmentid, frag.checksum, nodeid " +
+				"FROM " + Table.FILEFRAGMENT + " frag " +
+				"WHERE f.name='" + remotefile + "' " +
+				"ORDER BY fragmentid");
+			if (file.isEmpty()||filefragment.isEmpty()) {
+				return (Response) new Response(ResponseType.ERROR).setContent("No such file/file part");
+			}
+			nFrag = Integer.toBinaryString(filefragment.size());
+			DarkCloud.getInstance().getLogger().info("sembra che il file "+remotefile+" sia diviso in "+nFrag+" frammenti");		
+			node = DarkCloud.getInstance().getAliveServerNodes().get(client);		
+			if (node == null) {
+				DarkCloud.getInstance().getLogger().warn("[DarkCloud::Warning] Impossible to find the specified client");
+				return (Response) new Response(ResponseType.ERROR).setContent("Impossible to find the specified client");
+			} 
+			byte[] key= CryptUtil.decrypt(Base64.decodeBase64(file.get(0).get(1)),DarkCloud.getInstance().getPrivateKey(), "RSA/ECB/PKCS1Padding");
+			SecretKey filekey = (SecretKey) CryptUtil.secretKeyFromString(Base64.encodeBase64String(key));
+			Key chiave;		
+			chiave=node.getPubKey();
+			keystring = Base64.encodeBase64String(CryptUtil.encrypt(filekey.getEncoded(), chiave, "RSA/ECB/PKCS1Padding"));		
+		} catch (Exception e) {
+			DarkCloud.getInstance().getLogger().info("Error in retrieving of the file");
+			DarkCloud.getInstance().getLogger().warn("[DarkCloud::ERROR] " + StackTraceUtil.getStackTrace(e));
+			return (Response) new Response(ResponseType.ERROR).setContent(StackTraceUtil.getStackTrace(e));
+			}
+		
+		try{		
+			getreq = (Request) new Request(RequestType.RECEIVE).
+			appendField(new Field("file").
+				appendAttribute("name", remotefile).
+				appendAttribute("keystring",keystring).
+				appendAttribute("checksum",file.get(0).get(2)).
+				appendAttribute("creationtime",file.get(0).get(3)).
+				appendAttribute("nFrag", nFrag)
+				);
+			for(int i=0;i<filefragment.size();i++){
+				getreq.appendField(new Field("fragment"+i).
+					appendAttribute("fragmentid",filefragment.get(i).get(0)).
+					appendAttribute("checksum",filefragment.get(i).get(1)).
+					appendAttribute("nodeid",filefragment.get(i).get(2))
+					);
+			}
+		} catch (Exception e) {
+			DarkCloud.getInstance().getLogger().info("Error preparing the field to send");
+			DarkCloud.getInstance().getLogger().warn("[DarkCloud::ERROR] " + StackTraceUtil.getStackTrace(e));
+			return (Response) new Response(ResponseType.ERROR).setContent(StackTraceUtil.getStackTrace(e));
+		}
+		
+		
+		
+		try{
+			Response servresp=null;
+			servresp = node.send(getreq);
+			if (servresp.getType() == ResponseType.ACK){
+				return (Response) new Response(ResponseType.ACK).
+	        	appendField(new Field("file").
+	        		setAttribute("checksum", "cicca"));
+			}
+			else{
+				return (Response) new Response(ResponseType.ERROR);
+			}
+			
+		}catch(Exception e){
+			DarkCloud.getInstance().getLogger().info("Comunication error with the client");
+			DarkCloud.getInstance().getLogger().warn("[DarkCloud::ERROR] " + StackTraceUtil.getStackTrace(e));
+			return (Response) new Response(ResponseType.ERROR).setContent(StackTraceUtil.getStackTrace(e));
+		}
+		
+	}
+	public static Response receive(Request req)
+	{
+		Field file = req.getField("file");
+		if (file == null)
+		{
+			DarkCloud.getInstance().getLogger().warn("[DarkCloud::Warning] Invalid receive  request: No field property found");
+			return (Response) new Response(ResponseType.ERROR).setContent("Invalid receive request: No field property found");
+		}
+		int nFrag= Integer.parseInt(file.getAttribute("nFrag"));
+		
+		for(int i=0;i<=nFrag;i++){
+			Field frag = req.getField("fragment"+i);
+			if (("fragment"+i) == null)
+			{
+				DarkCloud.getInstance().getLogger().warn("[DarkCloud::Warning] Invalid receive request: No field fragment property found");
+				return (Response) new Response(ResponseType.ERROR).setContent("Invalid receive request: No field fragment property found");
+			}
+			try{
+			DarkCloud.getInstance().getDb().insert(Table.FILEFRAGMENT, new Tuple().
+				setField("name",file.getAttribute("name")).
+				setField("fragmentid", frag.getAttribute("fragmentid")).
+				setField("checksum", frag.getAttribute("chacksum")).
+				setField("nodeid", frag.getAttribute("nodeid")));
+			}catch(Exception e){
+				DarkCloud.getInstance().getLogger().info("Error in the insert of the file fragment "+i);
+				DarkCloud.getInstance().getLogger().error("[DarkCloud::Error] " + StackTraceUtil.getStackTrace(e));
+				return (Response) new Response(ResponseType.ERROR).setContent("[DarkCloud::Error] " + StackTraceUtil.getStackTrace(e));
+			}
+		}
+		try{
+			DarkCloud.getInstance().getDb().insert(Table.FILE, new Tuple().
+					setField("name", file.getAttribute("name")).
+					setField("key", file.getAttribute("keystring")).
+					setField("checksum", file.getAttribute("checksum")).
+					setField("creationtime", file.getAttribute("creationtime")).
+					setField("modifytime", new Date().getTime()));
+		}catch(Exception e){
+			DarkCloud.getInstance().getLogger().info("Error in the insert of the file");
+			DarkCloud.getInstance().getLogger().error("[DarkCloud::Error] " + StackTraceUtil.getStackTrace(e));
+			return (Response) new Response(ResponseType.ERROR).setContent("[DarkCloud::Error] " + StackTraceUtil.getStackTrace(e));
+		}
+		
+		try{
+			return (Response) new Response(ResponseType.ACK);
+		}catch(Exception e){
+			DarkCloud.getInstance().getLogger().info("Comunication error with the other client");
+			DarkCloud.getInstance().getLogger().warn("[DarkCloud::ERROR] " + StackTraceUtil.getStackTrace(e));
+			return (Response) new Response(ResponseType.ERROR).setContent(StackTraceUtil.getStackTrace(e));
+		}
+		
 	}
 }

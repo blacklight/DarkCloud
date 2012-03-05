@@ -29,9 +29,10 @@ public class Request extends Message {
 	{
 		PING,
         GET,
-		PUT
+		PUT,
+		SHARE,
+		RECEIVE
 	};
-	
 	/** Auto-incremental counter of the performed requests */
 	private static int seqNum = 0;
 	
