@@ -1,6 +1,6 @@
 package it.unimore.weblab.darkcloud.protocol;
 
-import java.security.Key;
+//import java.security.Key;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -365,21 +365,27 @@ public abstract class ClientResponseMethods extends ResponseMethods {
 			return (Response) new Response(ResponseType.ERROR).setContent("Invalid share request: No field property found");
 		}
 		
-		String client = sharing.getAttribute("client");
+		String secondhost = sharing.getAttribute("secondhost");
+		int secondport = Integer.parseInt(sharing.getAttribute("secondport"));
 		String remotefile = sharing.getAttribute("remotefile");
 		
-		boolean hasClient = false;
-		if (client != null) {
-			client = client.trim();
+		boolean hasSecondhost = false;
+		if (secondhost != null) {
+			secondhost = secondhost.trim();
 
-			if (!client.isEmpty()) {
-				hasClient = true;
+			if (!secondhost.isEmpty()) {
+				hasSecondhost = true;
 			}
 		}
 
-		if (!hasClient) {
-			DarkCloud.getInstance().getLogger().warn("[DarkCloud::Warning] Invalid share request: The sharing property has no client field");
-			return (Response) new Response(ResponseType.ERROR).setContent("The sharing property has no client field");
+		if (!hasSecondhost) {
+			DarkCloud.getInstance().getLogger().warn("[DarkCloud::Warning] Invalid share request: The sharing property has no second host field");
+			return (Response) new Response(ResponseType.ERROR).setContent("The sharing property has no second host field");
+		}
+
+		if (secondport<1||secondport>65535) {
+			DarkCloud.getInstance().getLogger().warn("[DarkCloud::Warning] Invalid share request: The sharing property has no second port field");
+			return (Response) new Response(ResponseType.ERROR).setContent("The sharing property has no second port field");
 		}
 		
 		boolean hasFile = false;
@@ -396,59 +402,97 @@ public abstract class ClientResponseMethods extends ResponseMethods {
 			return (Response) new Response(ResponseType.ERROR).setContent("The sharing property has no file field");
 		}
 		
-		DarkCloud.getInstance().getLogger().info("vuoi che servo il cliente "+ client+" e gli passo il file "+remotefile);		
-		ArrayList<ArrayList<String>> file = null;
-		ArrayList<ArrayList<String>> filefragment = null;
+		DarkCloud.getInstance().getLogger().info("Im trying to share whit "+ secondhost+":"+secondport+" the file "+remotefile);		
+		ArrayList<ArrayList<String>> file = null;;
 		String keystring="";
 		String nFrag="";
-		NetNode node;
+		String client;
+		NetNode node = null;
 		Request getreq;
-		try{
+		try{		
 			file = DarkCloud.getInstance().getDb().select(
-				"SELECT name, key, checksum, creationtime " +
-				"FROM " + Table.FILE +
-				"WHERE f.name='" + remotefile + "' " 
-				);
-			filefragment = DarkCloud.getInstance().getDb().select(
-				"SELECT fragmentid, frag.checksum, nodeid " +
-				"FROM " + Table.FILEFRAGMENT + " frag " +
-				"WHERE f.name='" + remotefile + "' " +
-				"ORDER BY fragmentid");
-			if (file.isEmpty()||filefragment.isEmpty()) {
+					"SELECT key, f.checksum, f.creationtime, fragmentid, frag.checksum, nodeid " +
+					"FROM " + Table.FILE + " f JOIN " + Table.FILEFRAGMENT + " frag " +
+					"ON f.name=frag.name " +
+					"WHERE f.name='" + remotefile + "' " +
+					"ORDER BY fragmentid");
+			if (file.isEmpty()) {
 				return (Response) new Response(ResponseType.ERROR).setContent("No such file/file part");
 			}
-			nFrag = Integer.toBinaryString(filefragment.size());
-			DarkCloud.getInstance().getLogger().info("sembra che il file "+remotefile+" sia diviso in "+nFrag+" frammenti");		
-			node = DarkCloud.getInstance().getAliveServerNodes().get(client);		
-			if (node == null) {
-				DarkCloud.getInstance().getLogger().warn("[DarkCloud::Warning] Impossible to find the specified client");
-				return (Response) new Response(ResponseType.ERROR).setContent("Impossible to find the specified client");
-			} 
-			byte[] key= CryptUtil.decrypt(Base64.decodeBase64(file.get(0).get(1)),DarkCloud.getInstance().getPrivateKey(), "RSA/ECB/PKCS1Padding");
-			SecretKey filekey = (SecretKey) CryptUtil.secretKeyFromString(Base64.encodeBase64String(key));
-			Key chiave;		
-			chiave=node.getPubKey();
-			keystring = Base64.encodeBase64String(CryptUtil.encrypt(filekey.getEncoded(), chiave, "RSA/ECB/PKCS1Padding"));		
 		} catch (Exception e) {
 			DarkCloud.getInstance().getLogger().info("Error in retrieving of the file");
 			DarkCloud.getInstance().getLogger().warn("[DarkCloud::ERROR] " + StackTraceUtil.getStackTrace(e));
 			return (Response) new Response(ResponseType.ERROR).setContent(StackTraceUtil.getStackTrace(e));
 			}
 		
+		try{
+			nFrag = Integer.toBinaryString(file.size());
+			client=DarkCloud.getNodeKey(secondhost, secondport);
+			//Temporary code to test the connection client problem.
+			DarkCloud.getInstance().getLogger().info("Seems the file "+remotefile+" was fragmented in "+nFrag+" parts");	
+			HashMap<String, NetNode> aliveClientNodes=DarkCloud.getInstance().getAliveClientNodes();
+			HashMap<String, NetNode> clientNodes=DarkCloud.getInstance().getClientNodes();
+			HashMap<String, NetNode> aliveServerNodes=DarkCloud.getInstance().getAliveServerNodes();
+			ArrayList<String> indexes = new ArrayList<String>(DarkCloud.getInstance().getClientNodes().keySet());
+			DarkCloud.getInstance().getLogger().info("Alive nodes "+aliveClientNodes);
+			DarkCloud.getInstance().getLogger().info("Alive server "+aliveServerNodes);
+			DarkCloud.getInstance().getLogger().info("Node list  "+clientNodes);
+			DarkCloud.getInstance().getLogger().info("Client key "+indexes);			
+			DarkCloud.getInstance().getLogger().info("The nodekey of the node you have specified is: "+client);
+			//End temporary code 
+			node= DarkCloud.getInstance().getClientNodes().get(client);
+			if(node==null){
+				DarkCloud.getInstance().getLogger().warn("[DarkCloud::Warning] Error opening the socket to the second node");
+				return (Response) new Response(ResponseType.ERROR).setContent("Error opening the socket to the second node");
+			}
+			long startTime = System.currentTimeMillis();			
+			Request req1 = new Request(RequestType.PING);
+			Response resp = node.send(req1);
+			if (resp.getType() != ResponseType.ACK)	{
+				DarkCloud.getInstance().getLogger().warn("[DarkCloud::Warning] Unexpected response for ping method");
+				return (Response) new Response(ResponseType.ERROR).setContent("Unexpected response for ping method");
+			}				
+			Field keyfield = resp.getField("pubkey");				
+			if ((keyfield) != null){
+				String pubkeystr = keyfield.getContent();
+				if (pubkeystr != null){
+					node.setPubKey(CryptUtil.pubKeyFromString(pubkeystr));
+				}
+			}				
+			long pingTime = System.currentTimeMillis() - startTime;
+			DarkCloud.getInstance().getLogger().debug("[DarkCloud::Debug] The node at " + node.getName() + ":" + node.getPort() + " is alive " +
+					"{PingTimeMsec " + pingTime + "}");					
+			DarkCloud.getInstance().getServerNodes().get(client).setAlive(true);
+			DarkCloud.getInstance().getServerNodes().get(client).setPingTimeMsec(pingTime);
+			DarkCloud.getInstance().getServerNodes().get(client).storeNode();
+		}catch(Exception e){
+			DarkCloud.getInstance().getLogger().warn("[DarkCloud::Warning] Error while verifying if the second node is alive");
+			return (Response) new Response(ResponseType.ERROR).setContent("Error while verifying if the second node is alive");
+		}
+		
+		try{
+			byte[] key= CryptUtil.decrypt(Base64.decodeBase64(file.get(0).get(0)),DarkCloud.getInstance().getPrivateKey(), "RSA/ECB/PKCS1Padding");
+			SecretKey filekey = (SecretKey) CryptUtil.secretKeyFromString(Base64.encodeBase64String(key));
+			keystring = Base64.encodeBase64String(CryptUtil.encrypt(filekey.getEncoded(), node.getPubKey(), "RSA/ECB/PKCS1Padding"));		
+		}catch(Exception e){
+			DarkCloud.getInstance().getLogger().warn("[DarkCloud::Warning] Error preparing the key");
+			return (Response) new Response(ResponseType.ERROR).setContent("Error preparing the key");
+		}
+		
 		try{		
 			getreq = (Request) new Request(RequestType.RECEIVE).
 			appendField(new Field("file").
 				appendAttribute("name", remotefile).
 				appendAttribute("keystring",keystring).
-				appendAttribute("checksum",file.get(0).get(2)).
-				appendAttribute("creationtime",file.get(0).get(3)).
+				appendAttribute("checksum",file.get(0).get(1)).
+				appendAttribute("creationtime",file.get(0).get(2)).
 				appendAttribute("nFrag", nFrag)
 				);
-			for(int i=0;i<filefragment.size();i++){
+			for(int i=0;i<file.size();i++){
 				getreq.appendField(new Field("fragment"+i).
-					appendAttribute("fragmentid",filefragment.get(i).get(0)).
-					appendAttribute("checksum",filefragment.get(i).get(1)).
-					appendAttribute("nodeid",filefragment.get(i).get(2))
+					appendAttribute("fragmentid",file.get(i).get(3)).
+					appendAttribute("checksum",file.get(i).get(4)).
+					appendAttribute("nodeid",file.get(i).get(5))
 					);
 			}
 		} catch (Exception e) {
@@ -456,9 +500,7 @@ public abstract class ClientResponseMethods extends ResponseMethods {
 			DarkCloud.getInstance().getLogger().warn("[DarkCloud::ERROR] " + StackTraceUtil.getStackTrace(e));
 			return (Response) new Response(ResponseType.ERROR).setContent(StackTraceUtil.getStackTrace(e));
 		}
-		
-		
-		
+				
 		try{
 			Response servresp=null;
 			servresp = node.send(getreq);
@@ -486,7 +528,7 @@ public abstract class ClientResponseMethods extends ResponseMethods {
 			DarkCloud.getInstance().getLogger().warn("[DarkCloud::Warning] Invalid receive  request: No field property found");
 			return (Response) new Response(ResponseType.ERROR).setContent("Invalid receive request: No field property found");
 		}
-		int nFrag= Integer.parseInt(file.getAttribute("nFrag"));
+		int nFrag= Integer.parseInt(file.getAttribute("nFrag"),2);
 		
 		for(int i=0;i<=nFrag;i++){
 			Field frag = req.getField("fragment"+i);

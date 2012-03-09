@@ -57,7 +57,7 @@ def usage():
 
 def main():
 	config = {}
-	optlist, args = getopt.getopt(sys.argv[1:], "f:F:h:p:r:c:", ["localfile=", "remotefile=", "host=", "port=", "request=", "client="])
+	optlist, args = getopt.getopt(sys.argv[1:], "f:F:h:p:r:H:P:", ["localfile=", "remotefile=", "host=", "port=", "request=", "secondhost=", "secondport="])
 
 	for opt, arg in optlist:
 		if opt in ('-h', '--host'):
@@ -78,8 +78,11 @@ def main():
 			config['localfile'] = arg
 		elif opt in ('-F', '--remotefile'):
 			config['remotefile'] = arg
-		elif opt in ('-c', '--client'):
-			config['client'] = arg
+		elif opt in ('-H', '--secondhost'):
+			config['secondhost'] = arg
+		elif opt in ('-P', '--secondport'):
+			config['secondport'] = arg
+				
 
 	if not 'host' in config or not 'port' in config or not 'request' in config:
 		usage()
@@ -88,8 +91,13 @@ def main():
 	if config['request'].lower() == 'ping':
 		req = Request(reqtype="PING")
 	elif config['request'].lower() == 'share':
-		if not 'client' in config:
-			print("SHARE method used, but no client to share the information was specified")
+		if not 'secondhost' in config:
+			print("SHARE method used, but no ip for the second client to share the information was specified")
+			usage()
+			return 1
+
+		if not 'secondport' in config:
+			print("SHARE method used, but no port for the second client to share the information was specified")
 			usage()
 			return 1
 
@@ -100,7 +108,8 @@ def main():
 
 		req = Request(reqtype="SHARE",
 			fields={
-				('sharing', 'client'): config['client'],
+				('sharing', 'secondhost'): config['secondhost'],
+				('sharing', 'secondport'): config['secondport'],
 				('sharing', 'remotefile'): config['remotefile']
 			}
 		)
@@ -122,7 +131,7 @@ def main():
 		req = Request(reqtype="PUT",
 			fields={
 				('file', 'encoding'): 'base64',
-				('file', 'remotefile'): config['remotefile'],
+				('file', 'name'): config['localfile'],
 				('file', 'content'): filecontent,
 				('file', 'checksum'): hashlib.md5(filecontent).hexdigest()
 			}
@@ -171,7 +180,7 @@ def main():
 		if config['request'].lower() == 'ping':
 			print ("The node at %s:%d is alive" % (config['host'], config['port']))
 		elif config['request'].lower() == 'share':
-			print ("The file %s has been successfully shared with %s" % (config['remotefile'], config['client']))
+			print ("The file %s has been successfully shared with %s:%d" % (config['remotefile'], config['secondhost'], config['secondport']))
 		elif config['request'].lower() == 'put':
 			print ("The file %s has been successfully saved on the network as %s" % (config['localfile'], config['remotefile']))
 		elif config['request'].lower() == 'get':
