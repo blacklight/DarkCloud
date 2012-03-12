@@ -8,6 +8,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.digest.DigestUtils;
 
 import it.unimore.weblab.darkcloud.db.Db.Table;
+import it.unimore.weblab.darkcloud.db.Db.UpdateType;
 import it.unimore.weblab.darkcloud.db.Tuple;
 import it.unimore.weblab.darkcloud.net.DarkCloud;
 import it.unimore.weblab.darkcloud.protocol.Response.ResponseType;
@@ -131,14 +132,29 @@ public abstract class ServerResponseMethods extends ResponseMethods {
 		
 		/// SAVE THE FILE TO DB START
 		try {
-			DarkCloud.getInstance().getDb().insert(Table.FILE, new Tuple().
+            // TODO Check client permissions
+            Tuple statement = new Tuple().
 				setField("name", name).
 				setField("content", file.getContent()).
 				setField("checksum", my_checksum).
 				setField("uploader", nodeid).
 				setField("creationtime", new Date().getTime()).
-				setField("modifytime", new Date().getTime())
-			);
+				setField("modifytime", new Date().getTime());
+            
+            UpdateType updtype = UpdateType.CREATE;
+            
+            try {
+			    DarkCloud.getInstance().getDb().insert(Table.FILE, statement);
+            } catch (SQLException e) {
+                updtype = UpdateType.UPDATE;
+			    DarkCloud.getInstance().getDb().update(Table.FILE, statement, "name='" + name + "'");
+            }
+            
+			DarkCloud.getInstance().getDb().insert(Table.FILEUPDATE, new Tuple().
+				setField("filename", name).
+				setField("nodeid", nodeid).
+				setField("updtype", updtype).
+				setField("updtime", new Date().getTime()));
 		} catch (SQLException e) {
 			return (Response) new Response(ResponseType.ERROR).setContent(StackTraceUtil.getStackTrace(e));
 		}
