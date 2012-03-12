@@ -1,5 +1,7 @@
 package it.unimore.weblab.darkcloud.db;
 
+import it.unimore.weblab.darkcloud.net.DarkCloud;
+
 import java.io.File;
 import java.sql.Blob;
 import java.sql.Connection;
@@ -72,8 +74,8 @@ public class Db {
 			"key text, " +
 			"checksum text, " +
 			"uploader text," +
-			"creationtime datetime, " +
-			"modifytime datetime, " +
+			"creationtime text, " +
+			"modifytime text, " +
 			"modifiedby text);"
 		);
 		
@@ -110,7 +112,7 @@ public class Db {
 			"filename text, " +
 			"nodeid text, " +
 			"updtype integer, " +
-			"upddate datetime, " +
+			"updtime text, " +
 			"foreign key(filename) references file(name), " +
 			"foreign key(updtype) references updatetype(updatetypeid));"
 		);
@@ -216,6 +218,14 @@ public class Db {
 	 */
 	public void insert(Table table, Tuple data) throws SQLException
 	{
+        String logtrace = "[DarkCloud::Db] {Instruction INSERT} {Table " + table.toString().toLowerCase() + "} ";
+        
+        for (int i=0; i < data.getFields().size(); i++)
+        {
+        	logtrace += "{" + data.getFields().get(i) + " " + data.getField(data.getFields().get(i)) + "} ";
+        }
+        
+        DarkCloud.getInstance().getLogger().debug(logtrace);
 		String insertStatement = "INSERT INTO " + table.toString().toLowerCase() + "(";
 		boolean isFirst = true;
 		ArrayList<String> fieldsnames = data.getFields();
@@ -304,6 +314,15 @@ public class Db {
 	 */
 	public void update(Table table, Tuple data, String whereCondition) throws SQLException
 	{
+        String logtrace = "[DarkCloud::Db] {Instruction UPDATE} {Table " + table.toString().toLowerCase() + "} ";
+        
+        for (int i=0; i < data.getFields().size(); i++)
+        {
+        	logtrace += "{" + data.getFields().get(i) + " " + data.getField(data.getFields().get(i)) + "} ";
+        }
+        
+        logtrace += "{WHERE " + whereCondition + "}";
+        DarkCloud.getInstance().getLogger().debug(logtrace);
 		boolean emptyCond = true;
 		
 		if (whereCondition != null) {
