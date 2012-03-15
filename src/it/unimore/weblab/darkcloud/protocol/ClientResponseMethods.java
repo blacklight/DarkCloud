@@ -139,7 +139,7 @@ public abstract class ClientResponseMethods extends ResponseMethods {
 			key = CryptUtil.generateSymmetricKey();
 			encryptedContent = Base64.encodeBase64String(CryptUtil.encrypt(contentBytes, key, "AES"));
 			//After had encrypted the file content , we calculate how big are our fragment 
-
+			DarkCloud.getInstance().getLogger().info("***contenuto file put "+encryptedContent);
 		} catch (Exception e1) {
 			DarkCloud.getInstance().getLogger().error("[DarkCloud::Error] " + StackTraceUtil.getStackTrace(e1));
 			return (Response) new Response(ResponseType.ERROR).setContent("[DarkCloud::Error] " + StackTraceUtil.getStackTrace(e1));
@@ -147,12 +147,16 @@ public abstract class ClientResponseMethods extends ResponseMethods {
 
 		int fileDimension = encryptedContent.length();
 		int fileFragmentSize=fileDimension/nServer;
+		fileFragmentSize=fileFragmentSize+1;
 		String[] fragment = new String[nServer];
-
-		for(int i=0; i<nServer; i++) {
+		DarkCloud.getInstance().getLogger().info("il file è grande "+fileDimension+" abbiamo "+nServer+" quindi i frammenti saranno di "+fileFragmentSize);
+		
+		for(int i=0; i<(nServer-1); i++) {
 			fragment[i]=encryptedContent.substring(i*fileFragmentSize, fileFragmentSize*(i+1));
+			DarkCloud.getInstance().getLogger().info("il frammento "+i+" contiene "+fragment[i]);
 		}   
-
+		fragment[nServer-1]=encryptedContent.substring(((nServer-1)*fileFragmentSize), fileDimension);
+		DarkCloud.getInstance().getLogger().info("il frammento "+(nServer-1)+" contiene "+fragment[(nServer-1)]);
 		Response resp = null;    
 
 		for (int i=0; i<nServer; i++) {
@@ -339,7 +343,7 @@ public abstract class ClientResponseMethods extends ResponseMethods {
 					fileContent=fileContent.trim();
 				}
 			}
-			
+			DarkCloud.getInstance().getLogger().info("***file del get "+fileContent);
 			fileContent = Base64.encodeBase64String(
 					CryptUtil.decrypt(
 							Base64.decodeBase64(fileContent), filekey, "AES"));
