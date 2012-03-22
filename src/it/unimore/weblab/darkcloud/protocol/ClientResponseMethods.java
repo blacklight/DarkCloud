@@ -139,7 +139,6 @@ public abstract class ClientResponseMethods extends ResponseMethods {
 			key = CryptUtil.generateSymmetricKey();
 			encryptedContent = Base64.encodeBase64String(CryptUtil.encrypt(contentBytes, key, "AES"));
 			//After had encrypted the file content , we calculate how big are our fragment 
-			DarkCloud.getInstance().getLogger().info("***contenuto file put "+encryptedContent);
 		} catch (Exception e1) {
 			DarkCloud.getInstance().getLogger().error("[DarkCloud::Error] " + StackTraceUtil.getStackTrace(e1));
 			return (Response) new Response(ResponseType.ERROR).setContent("[DarkCloud::Error] " + StackTraceUtil.getStackTrace(e1));
@@ -149,14 +148,11 @@ public abstract class ClientResponseMethods extends ResponseMethods {
 		int fileFragmentSize=fileDimension/nServer;
 		fileFragmentSize=fileFragmentSize+1;
 		String[] fragment = new String[nServer];
-		DarkCloud.getInstance().getLogger().info("il file è grande "+fileDimension+" abbiamo "+nServer+" quindi i frammenti saranno di "+fileFragmentSize);
 		
 		for(int i=0; i<(nServer-1); i++) {
 			fragment[i]=encryptedContent.substring(i*fileFragmentSize, fileFragmentSize*(i+1));
-			DarkCloud.getInstance().getLogger().info("il frammento "+i+" contiene "+fragment[i]);
 		}   
 		fragment[nServer-1]=encryptedContent.substring(((nServer-1)*fileFragmentSize), fileDimension);
-		DarkCloud.getInstance().getLogger().info("il frammento "+(nServer-1)+" contiene "+fragment[(nServer-1)]);
 		Response resp = null;    
 
 		for (int i=0; i<nServer; i++) {
@@ -343,7 +339,6 @@ public abstract class ClientResponseMethods extends ResponseMethods {
 					fileContent=fileContent.trim();
 				}
 			}
-			DarkCloud.getInstance().getLogger().info("***file del get "+fileContent);
 			fileContent = Base64.encodeBase64String(
 					CryptUtil.decrypt(
 							Base64.decodeBase64(fileContent), filekey, "AES"));
@@ -405,8 +400,7 @@ public abstract class ClientResponseMethods extends ResponseMethods {
 			DarkCloud.getInstance().getLogger().warn("[DarkCloud::Warning] Invalid share request: The sharing property has no file field");
 			return (Response) new Response(ResponseType.ERROR).setContent("The sharing property has no file field");
 		}
-		
-		DarkCloud.getInstance().getLogger().info("Im trying to share whit "+ secondhost+":"+secondport+" the file "+remotefile);		
+				
 		ArrayList<ArrayList<String>> file = null;;
 		String keystring="";
 		String nFrag="";
@@ -432,43 +426,11 @@ public abstract class ClientResponseMethods extends ResponseMethods {
 		try{
 			nFrag = Integer.toBinaryString(file.size());
 			client=DarkCloud.getNodeKey(secondhost, secondport);
-			//Temporary code to test the connection client problem.
-			DarkCloud.getInstance().getLogger().info("Seems the file "+remotefile+" was fragmented in "+nFrag+" parts");	
-			HashMap<String, NetNode> aliveClientNodes=DarkCloud.getInstance().getAliveClientNodes();
-			HashMap<String, NetNode> clientNodes=DarkCloud.getInstance().getClientNodes();
-			HashMap<String, NetNode> aliveServerNodes=DarkCloud.getInstance().getAliveServerNodes();
-			ArrayList<String> indexes = new ArrayList<String>(DarkCloud.getInstance().getClientNodes().keySet());
-			DarkCloud.getInstance().getLogger().info("Alive nodes "+aliveClientNodes);
-			DarkCloud.getInstance().getLogger().info("Alive server "+aliveServerNodes);
-			DarkCloud.getInstance().getLogger().info("Node list  "+clientNodes);
-			DarkCloud.getInstance().getLogger().info("Client key "+indexes);			
-			DarkCloud.getInstance().getLogger().info("The nodekey of the node you have specified is: "+client);
-			//End temporary code 
-			node= DarkCloud.getInstance().getClientNodes().get(client);
+			node= DarkCloud.getInstance().getAliveClientNodes().get(client);
 			if(node==null){
 				DarkCloud.getInstance().getLogger().warn("[DarkCloud::Warning] Error opening the socket to the second node");
 				return (Response) new Response(ResponseType.ERROR).setContent("Error opening the socket to the second node");
 			}
-			long startTime = System.currentTimeMillis();			
-			Request req1 = new Request(RequestType.PING);
-			Response resp = node.send(req1);
-			if (resp.getType() != ResponseType.ACK)	{
-				DarkCloud.getInstance().getLogger().warn("[DarkCloud::Warning] Unexpected response for ping method");
-				return (Response) new Response(ResponseType.ERROR).setContent("Unexpected response for ping method");
-			}				
-			Field keyfield = resp.getField("pubkey");				
-			if ((keyfield) != null){
-				String pubkeystr = keyfield.getContent();
-				if (pubkeystr != null){
-					node.setPubKey(CryptUtil.pubKeyFromString(pubkeystr));
-				}
-			}				
-			long pingTime = System.currentTimeMillis() - startTime;
-			DarkCloud.getInstance().getLogger().debug("[DarkCloud::Debug] The node at " + node.getName() + ":" + node.getPort() + " is alive " +
-					"{PingTimeMsec " + pingTime + "}");					
-			DarkCloud.getInstance().getServerNodes().get(client).setAlive(true);
-			DarkCloud.getInstance().getServerNodes().get(client).setPingTimeMsec(pingTime);
-			DarkCloud.getInstance().getServerNodes().get(client).storeNode();
 		}catch(Exception e){
 			DarkCloud.getInstance().getLogger().warn("[DarkCloud::Warning] Error while verifying if the second node is alive");
 			return (Response) new Response(ResponseType.ERROR).setContent("Error while verifying if the second node is alive");
@@ -533,8 +495,7 @@ public abstract class ClientResponseMethods extends ResponseMethods {
 			return (Response) new Response(ResponseType.ERROR).setContent("Invalid receive request: No field property found");
 		}
 		int nFrag= Integer.parseInt(file.getAttribute("nFrag"),2);
-		
-		for(int i=0;i<=nFrag;i++){
+		for(int i=0;i<nFrag;i++){
 			Field frag = req.getField("fragment"+i);
 			if (("fragment"+i) == null)
 			{
@@ -545,7 +506,7 @@ public abstract class ClientResponseMethods extends ResponseMethods {
 			DarkCloud.getInstance().getDb().insert(Table.FILEFRAGMENT, new Tuple().
 				setField("name",file.getAttribute("name")).
 				setField("fragmentid", frag.getAttribute("fragmentid")).
-				setField("checksum", frag.getAttribute("chacksum")).
+				setField("checksum", frag.getAttribute("checksum")).
 				setField("nodeid", frag.getAttribute("nodeid")));
 			}catch(Exception e){
 				DarkCloud.getInstance().getLogger().info("Error in the insert of the file fragment "+i);

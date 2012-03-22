@@ -13,6 +13,7 @@ import java.security.PublicKey;
 import java.security.SignatureException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.net.ssl.SSLSocketFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -164,10 +165,15 @@ public abstract class NetNode {
 		}
 		
 		nodeid = nodeid.trim();
-		NetNode node = DarkCloud.getInstance().getServerNodes().get(nodeid);
+		NetNode node = null;
+		HashMap<String, NetNode> clientNodes=DarkCloud.getInstance().getClientNodes();
+		HashMap<String, NetNode> serverNodes=DarkCloud.getInstance().getServerNodes();
+		if(clientNodes.containsKey(nodeid)){node = DarkCloud.getInstance().getClientNodes().get(nodeid);}
+		if(serverNodes.containsKey(nodeid)){node = DarkCloud.getInstance().getServerNodes().get(nodeid);}
+		
 		
 		if (node == null) {
-			throw new ProtocolException("No server node was found with id " + nodeid);
+			throw new ProtocolException("No server or client node was found with id " + nodeid);
 		}
 		
 		PublicKey pubkey = (PublicKey) node.getPubKey();

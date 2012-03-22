@@ -43,7 +43,6 @@ class NodeChecker extends Thread {
 			net = DarkCloud.getInstance();
 			Request req = new Request(RequestType.PING);
 			Response resp = netnode.send(req);
-			
 			if (resp.getType() != ResponseType.ACK)
 			{
 				throw new ProtocolException("Protocol error - The node at " + netnode.getName() + ":" + netnode.getPort() +
@@ -65,10 +64,16 @@ class NodeChecker extends Thread {
 			long pingTime = System.currentTimeMillis() - startTime;
 			net.getLogger().debug("[DarkCloud::Debug] The node at " + netnode.getName() + ":" + netnode.getPort() + " is alive " +
 				"{PingTimeMsec " + pingTime + "}");
-				
-			net.getServerNodes().get(nodeid).setAlive(true);
-			net.getServerNodes().get(nodeid).setPingTimeMsec(pingTime);
-			net.getServerNodes().get(nodeid).storeNode();
+			if (netnode.getType() == DarkCloudNodeType.SERVER) {	
+				net.getServerNodes().get(nodeid).setAlive(true);
+				net.getServerNodes().get(nodeid).setPingTimeMsec(pingTime);
+				net.getServerNodes().get(nodeid).storeNode();
+			}
+			if (netnode.getType() == DarkCloudNodeType.CLIENT) {
+				net.getClientNodes().get(nodeid).setAlive(true);
+				net.getClientNodes().get(nodeid).setPingTimeMsec(pingTime);
+				net.getClientNodes().get(nodeid).storeNode();
+			}
 		} catch (Exception e) {
 			if (netnode.getType() == DarkCloudNodeType.SERVER) {
 				net.getServerNodes().get(nodeid).setAlive(false);

@@ -48,7 +48,7 @@ class Request:
 			s += "\t<content><![CDATA[%s]]></content>\n" % (base64.b64encode(self.content))
 
 		s += '</request>' + "\n"
-		s = "%d\n%s" % (len(s), s)
+		s = "%d\n\n%s" % (len(s), s)
 		return s
 
 def usage():
@@ -151,7 +151,6 @@ def main():
 	sock = ssl.wrap_socket(socket.socket(socket.AF_INET, socket.SOCK_STREAM), ssl_version=ssl.PROTOCOL_SSLv3)
 	sock.connect((config['host'], config['port']))
 	sock.write(req.toString())
-
 	fs = sock.makefile()
 	fs.readline()
 	fs.readline()
@@ -180,7 +179,7 @@ def main():
 		if config['request'].lower() == 'ping':
 			print ("The node at %s:%d is alive" % (config['host'], config['port']))
 		elif config['request'].lower() == 'share':
-			print ("The file %s has been successfully shared with %s:%d" % (config['remotefile'], config['secondhost'], config['secondport']))
+			print ("The file %s has been successfully shared with %s:%s" % (config['remotefile'], config['secondhost'], config['secondport']))
 		elif config['request'].lower() == 'put':
 			print ("The file %s has been successfully saved on the network as %s" % (config['localfile'], config['remotefile']))
 		elif config['request'].lower() == 'get':
