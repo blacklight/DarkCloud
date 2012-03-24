@@ -1,0 +1,113 @@
+\chapter{Panoramica argomentazioni}
+In questo capitolo procederemo ad illustrare la necessità al fronte della quale la nostra tesi è andata a nascere 
+come prima soluzione, spaziando poi sugli studi effettuati sull'argomento, sull'insieme delle soluzioni che 
+attualmente compongono lo standard de facto nel settore e con una carrellata di termini e concetti che 
+permetteranno al lettore di comprendere il resto del documento.
+\section{La sfida}
+Uno dei ruoli fondamentali che i professori universitari hanno nella società, oltre a formare giovani promesse, 
+è quello di aiutare aziende ed enti a risolvere problemi per i quali ad oggi ancora le realtà lavorative non sono 
+state in grado di fornire strumenti definitivi.
+
+L'illustre professor M.Colajanni fu infatti invitato ad aiutare un ente, che aveva bisogno di un software 
+per il mantenimento e la condivisione di materiale sensibile, con il requisito principale della sicurezza e della continua reperibilità dei dati.
+Quindi un software che avesse un approccio diverso dalla massa per far si che eccellesse sotto questi aspetti.
+
+Nella fattispecie del nostro caso oggi esistono molti programmi che sono in gradi di condividere informazioni tra professionisti 
+che collaborano, ma quando si tratta di dati sensibili spesso le soluzioni commerciali sono anche le più soggette a vulnerabilità.
+Questo perché per esempio essendo diffuse su vasta scala e quindi utilizzate da molte aziende, sono una preda molto ambita da 
+utenti male intenzionati, che una volta trovata una falla possono usarla per carpire informazioni da molte aziende.
+Inoltre le software house più grandi e blasonate è noto che tendono a non abbracciare troppo velocemente le nuove tecnologie e ad aprire il loro software.
+Questo porta ad aggiornamenti delle vulnerabilità molto rallentati e a software che anche in versioni nuove spesso nasconde codice 
+con soluzioni obsolete.
+
+Un collaboratore del professor Colajanni, nonché correlatore di questa tesi, l'ingegner Fabio Manganiello ebbe un ottima idea che 
+è quella alla base di questa tesi e dell'intero progetto darkcloud.
+Fondamentalmente l'idea è quella di usare una rete p2p e implementargli l'uso del moderno cloud-computing per salvare online i file in modo frammentato.
+Quindi avere una rete di computer collegati tra di loro attraverso internet, ma questa rete doveva essere non è identificabile da un osservatore esterno, nella quale gli utilizzatori sono i nostri utenti e le macchine che invece sostengono la struttura sono servizi di cloud computing creati ad hoc.
+
+Per avanzare nella comprensione del progetto dobbiamo capire meglio quali sono i diversi tipi di p2p usati oggi e in cosa consiste il cloud computing, compito delegato ai prossimi paragrafi.
+\section{Studio delle reti p2p}
+Tutte le grandi reti moderne di condivisione e ricerca sono nate dallo studio e miglioramento di quelle che sono state le pietre miliari nell'evoluzione del networking.
+Per capire cosa ci serviva e come poterlo ottenere anche noi siamo partiti studiando alcuni modelli che sono stati rivoluzionari nel periodo della loro nascita.
+In particolare si vedranno le caratteristiche di Napster, Gnutella e Freenet.
+Nell'analizzare queste reti però teniamo sempre presente il nostro caso di studio, il gruppo di professionisti che deve condividere materiale sensibile, e presteremo infatti attenzione a quelli che possono essere i punti a noi favorevoli e quelli che invece andrebbero a discapito dei nostri obbiettivi.
+\subsection{Napster}
+\begin{figure}
+\begin{center}
+\includegraphics[width=15.3cm]{img/napster.png}
+\end{center}
+\caption{Architettura di Napster}
+\label{Architettura Napster}
+\end{figure}
+Napster è stato il primo software di p2p ad avere una diffusione di un certo livello. Nacque nel 1999 da un progetto di Shawn Fanning.
+Non era un sistema p2p puro, in quanto manteneva una lista di tutti gli utenti connessi e dei loro file su dei server centrali raggiungibili da tutti.
+Quindi se un nodo voleva trovare un file mandava la richiesta al server centrale che rispondeva con la lista dei nodi che lo avevano e il richiedente poteva fare partire il download da tali nodi. Quando utente decideva di condividere un file mandava i dettagli al server centrale che li salvava.
+Quindi le condivisioni vere e proprie avvenivano tra gli utenti, era come un programma di istant messaging avanzato.
+I vantaggi di questo tipo di struttura risiedono nella velocità di reperibilità delle informazioni, in quanto l'elenco era disponibile a tutti direttamente. Altro punto a suo favore è la velocità di condivisione, in quanto i nodi si scambiano i file creando una connessione diretta tra di loro, e il file è in chiaro e completo.Però quelle che sono le sue caratteristiche positive in una prima analisi, si rivelano i suoi maggiori punti deboli se vista dalla prospettiva di utenti male intenzionati. Per esempio se il server centrale cade, tutta la rete smette di funzionare. Oppure se un ente vuole proibire la diffusione di certo materiale gli basterà confiscare il server per sapere chi ne era il detentore e con chi lo ha condiviso. Il connettersi direttamente con un altro utente porta inoltre tutta una serie di punti deboli, come la facile trasmissione di infezioni informatiche, il fatto che se il nodo è spento il file non è raggiungibile, la mancanza di certificati di autenticità permette ad utenti di modificare contenuti e re immetterli in rete.
+\subsection{Gnutella}
+\begin{figure}
+\begin{center}
+\includegraphics[width=15.3cm]{img/gnutella.png}
+\end{center}
+\caption{Architettura di Gnutella}
+\label{Architettura Gnutella}
+\end{figure}
+Gnutella a differenza di Napster è un software peer to peer puro. Cioè non ha alcun server che centralizza alcun tipo di informazione.
+I computer degli utenti sono gli unici nodi che compongono la rete. Quando un certo numero di utenti installa il software sulla propria macchina, automaticamente Gnutella riconosce i nodi vicini e e in questo modo la rete si amplia. Le ricerche avvengono secondo la tecnica del flodding, cioè un nodo per trovare un file manda una richiesta ai nodi vicini, se i nodi vicini non hanno il file richiesto inoltrano a loro volta a tutti nodi che conoscono la stessa domanda, tranne al nodo che gli ha mandato la richiesta originale. Per evitare il collasso della rete le richieste avevano un numero massimo di 'salti' tra nodi, al termine del quale venivano cancellate. Anche i trasferimenti di file vengono sostenuti dai nodi intermedi tra richiedente e possessore. 
+Questo protocollo ha il vantaggio di essere potenzialmente inarrestabile, fortemente stabile e molto dinamico permettendo a nodi di entrare e uscire senza modificare le prestazioni della rete. Non teme quindi attacchi che ne arrestino il funzionamento. 
+Però la tecnica di ricerca molto rudimentale non garantisce di trovare un file, e i tempi per trovarlo comunque possono essere molto lunghi.
+\subsection{Kademlia}
+\begin{figure}
+\begin{center}
+\includegraphics[width=15.3cm]{img/kademlia.png}
+\end{center}
+\caption{Indici dei file in Kademlia}
+\label{Indici dei file in Kademlia}
+\end{figure}
+E' un protocollo di rete peer to peer decentralizzato ideato da Petar Maymounkov e David Mazières della New York University.
+E' il primo protocollo che analizziamo che sfrutta la tecnologia delle DHT ovvero Distribuited Hash Tables.
+Il metodo di mantenimento dell'indice dei file presenti sulla rete, DHT appunto, è il suo punto forte. Fino a quel momento il reperimento dei file era o totalmente centralizzato, mantenendo le liste in uno o più server, o totalmente distribuito, dovendo contattare moltissimi nodi per trovare i file.
+Per capire come funzionino invece le DHT immaginate la lista di tutti i file presenti in una rete p2p, ora spezzettate questa lista in tante parti e distribuitele ai nodi che la compongono. E' chiaro che questi pezzi di lista sono replicati, in modo che se un nodo cade ve ne siano alcuni con la stessa informazione.
+Ogni nodo oltre ad avere il suo pezzetto di lista sa anche in che direzione la lista si propaga, in questo modo se un nodo a lui vicino gli chiede dove si trova un file, e lui non lo sa, potrà indicargli in che direzione continuare a cercarlo. Una volta che il nodo richiedente trova nella lista il file che vuole, legge gli ip dei nodi che hanno il file e procede al recupero del file.
+Il reperimento dei file in questo modo è molto più veloce di quanto non lo sarebbe in una rete completamente decentralizzata dove è necessario fare rimbalzare la richiesta verso moltissimi nodi.
+Ed è anche più sicuro del metodo centralizzato, non solo dal punto di vista della privacy ma anche di stabilità della rete stessa e di reperibilità dei file.
+Dato che non esiste nessun tipo di centralizzazione e i nodi sono responsabili dei file che caricano però, se tutti i nodi che conoscono un file si spengono l'intera rete non riuscirà più a raggiungere quel file.
+\subsection{Le darknet e Freenet}
+Le darknet sono reti per condividere file nate per tutelare la privacy e combattere la censura.
+Infatti in alcuni paesi lo stato proibisce di condividere file che dicano cose che non sono da esso approvate, e per permettere la libera
+diffusione di informazioni alcuni Informatici hanno pensato ad un modello di rete altamente dinamico e anonimo.
+Il termine darknet è stato coniato prima della nascita di internet nel 1970, quando l'unica rete riconosciuta era ARPANET e identificava
+una rete che fosse isolata da ARPANET per motivi di sicurezza. Questo però non vuol dire che ne fosse separata, infatti i terminali che appartenevano a
+quelle darknet potevano ricevere ed inviare dati attraverso ARPANET, ma non risultavano registrati da nessuna parte e non potevano essere rintracciati
+in quanto non rispondevano ai segnali che chiedevano di identificarsi.
+Con il tempo e l'avvento di internet si iniziò ad usare il termine darknet per indicare reti private, 
+che però passavano per internet, che alcuni utenti usavano per scambiarsi file, ma sempre e soltanto in piccoli gruppi di persone che si conoscevano.
+Questo termine prima sconosciuto ai profani è stato dato in pasto ai media a seguito della pubblicazione di un documento \cite{thedarknet} da parte di quattro ricercatori della Microsoft.
+Questo documento elencava tre punti essenziali che permettevano di identificare una rete come darknet: 
+\begin{enumerate}
+	\item ogni oggetto distribuito doveva essere condiviso sulle macchine di una parte degli utenti, in una forma che ne consentisse la copia
+	\item tutti gli utenti possono ottenere una copia dei file se ne hanno interesse
+	\item tutti gli utenti devono essere connessi tramite banda larga
+\end{enumerate}
+Questo documento fu condiviso su larga scala e interpretato dai tutori del diritto di autore come il principale impedimento alla diffusione 
+di materiale protetto in forma elettronica.
+Quindi si può spesso sentire parlare di programmi di condivisione come furono Napster, Gnutella, Kademlia e molti altri sotto la definizione di darknet da parte dei media, ma in realtà non è così. Questi sono programmi di p2p, peer to peer, differenti dalle darknet a causa della accessibilità delle reti a chiunque installi semplicemente il software.
+La tipologia di rete che si avvicinava di più al concetto di darknet erano le reti f2f, friend to friend.
+Ovvero reti dove si era collegati solo a nodi fidati e conosciuti, tramite porte e protocolli non standard. 
+Il concetto di darknet però è stato ulteriormente rivoluzionato attorno al 2005 con la nascita di reti p2p ANONIME.
+Reti nelle quali è possibile condividere file senza il rischio di essere rintracciati .
+Proprio per questa caratteristica le reti darknet sono molto criticate, perché oltre che per preservare la libertà di informazione può essere utilizzato per condividere materiale illegale e dannoso.
+
+Il programma che abbiamo scelto di studiare nella categoria darknet è stato Freenet. Questa scelta è stata dettata dalla grande comunità che gli sta alle spalle, dal fatto che sia disponibile il codice sorgente, e dalle caratteristiche che più si avvicinavano al nostro modello. Infatti Freenet è una rete decentralizzata, cioè dove non abbiamo server ma tutte le informazioni sono distribuite sui nodi. E' una rete realizzata puntando ad un alto livello di sicurezza ed anonimato. 
+I file sono salvati sui nodi in modo crittografato e replicati su diversi nodi. Questo fa si che chi ha installato il programma non conosca cosa stia condividendo. Non esiste una struttura gerarchica tra i nodi, i collegamenti si basano sulla vicinanza, ogni nodo conosce solo quelli vicino a lui. Quindi quando vengono aggiunti nuovo nodi non si può prevedere a chi saranno collegati. Ogni file è contraddistinto da un id univoco, e il meccanismo per gestire l'indicizzazione dei file è simile alle DHT però invece che basarsi su una lista dei file che un nodo possiede si basa sulla velocità con la quale un nodo può avere un file. Dopo che un nodo ha trovato il file la richiesta passa di nodo in nodo, fino a raggiungere il nodo con il file. In seguito il nodo possessore del file lo invia, e il file viene trasmesso tra tutti i nodi intermedi. Quando vengono caricati nella rete i file non rimangono nel nodo che li ha condivisi, ma vengono replicati in modo da essere disponibili ad una certa velocità per tutti i nodi della rete. Dato che il modo per indicizzare i file si basa sulla velocità alla quale un file è disponibile questo vuol dire creare una ridondanza dei file su tutta la rete in modo da essere disponibili più velocemente per tutti! 
+Oltre al funzionamento sulla topografia sopra descritta, cioè sfruttando tutti i pc con installato Freenet presenti sulla rete internet, il software offre una modalità di funzionamento friend to friend. In questo setting noi andremo a specificare una lista di nodi manualmente, e i nodi inseriti saranno gli unici con cui andremo a condividere dei file.
+E' una opportunità in più tramite la quale si va a chiudere la rete dei propri amici. Può essere utile per esempio per alcuni gruppi di utenti che condividono file riservati e non vogliono renderli disponibili a tutta la rete Freenet.
+Ogni caratteristica di questo programma è atta ad aumentarne l'anonimato e possiamo dire che funziona molto bene.
+Tuttavia queste scelte sono state fatte essendo consapevoli che i file condivisi sarebbero stati documenti di piccole dimensioni. Questo rende lento e difficile la gestione di file di dimensioni maggiori, caratteristica che il nostro software deve avere.
+\subsection{Cloud computing}
+Di cloud computing si sente parlare già dal 1960, quando lo scienziato informatico John McCarthy ipotizza un futuro nel quale la capacità di calcolo sarebbe stato organizzato come un servizio di pubblica utilità. Naturalmente i primi passi furono ben distanti, infatti le grandi aziende che con gli anni iniziavano ad usare data center avevano delle macchine che erano dedicate a sopperire solo alle richieste di un cliente. Gli studiosi si accorsero che per la maggior parte del tempo però le macchine lavoravano al minimo, registrando picchi di calcolo solo in certi momenti della giornata. In questo modo però vi era un enorme spreco di energia elettrica e di risorse inutilizzate. La prima multinazionale che notato questi sprechi si mise al lavoro per trovare una soluzione fu la americana Amazon. Infatti nel 2006 presentò Amazon Web Service, che erano un insieme di servizi web. All'interno dei servizi proposti ve ne erano diversi di cloud computing, per esempio servizi che offrivano spazio online dinamico e veloce con costi in base al consumo, servizi che offrivano sistemi operativi virtuali utilizzabili online con costi basati sul tempo che si usavano e server per applicazioni web dove si pagava in base alle ore che il servizio era operante. E possiamo dire che è stata proprio questa la nascita del vero e proprio cloud computing, ovvero servizi web che ci offrono spazio di archiviazione, capacità computazionale, sistema operativo, hardware e banda in base alle nostre esigenze in modo dinamico. Un po come la rete di distribuzione idrica o del servizio elettrico, dove si paga quello che si consuma. 
+
+Negli ultimi tempi poi abbiamo visto una esplosione di questo tipo di servizi, infatti ormai quasi tutti i provider hanno a listino un servizio di cloud. Inoltre viste le potenzialità molte aziende del calibro di Apple e Microsoft stanno utilizzando questa tecnologia per dare un servizio importante ai propri utenti come il centralizzare i dati personali tra i tanti terminali che oggi si hanno, notebook, desktop, smartphone, tablet. Possiamo dire che il cloud cambierà l'informatica da come la conosciamo adesso.
+
+Il cloud computing è una risorsa molto preziosa visti i moderni strumenti che mette a disposizione, non solo perché offre una grande potenza di calcolo o di spazio di archiviazione con un basso costo vista la dinamicità, ma anche perché i moderni strumenti usati dal cloud per virtualizzare ci permettono di avere un qualsiasi modello di hardware vogliamo subito e di fare le modifiche necessarie a piacimento.
+Dato che la nostra rete darkcloud deve rendere i dati sempre disponibili, non era possibile scegliere una struttura di rete che mantenesse il dato sui client. Ciò avrebbe portato molti rischi che non potevamo accettare. Invece la tecnologia del cloud computing ci permette di avere una serie di macchine sempre online e con uno spazio di archiviazione e una banda passante di capacità che vanno oltre il nostro massimo bisogno. 

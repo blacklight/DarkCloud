@@ -1,0 +1,41 @@
+\documentclass[a4paper,12pt,twoside,openright,final]{book}
+
+\usepackage[ansinew]{inputenc}
+\usepackage[italian]{babel}
+\usepackage{algorithmic}
+\usepackage{amsfonts}
+\usepackage{epsfig}
+\usepackage{fancyhdr}
+\usepackage{latexsym}
+\usepackage{lipsum}
+\usepackage{url}
+\usepackage{verbatim}
+\usepackage{wrapfig}
+\usepackage[top=20mm, bottom=20mm, bindingoffset=1.5cm, margin=2cm]{geometry}
+
+\setlength{\headheight}{15.2pt}
+\pagestyle{fancy}
+
+\fancyhead{}
+\fancyfoot{}
+\fancyhead[RO,LE]{\thepage}
+\fancyhead[LO]{\slshape \leftmark}
+\fancyhead[RE]{\slshape \rightmark}
+
+
+\begin{document}
+
+\include{fronte}
+\tableofcontents
+\include{astratto}
+\include{cap1}
+\include{cap2}
+\include{cap3}
+\include{cap4}
+\include{cap5}
+\include{cap6}
+\include{bibliografia}
+\listoffigures
+\include{ringraziamenti}
+
+\end{document}

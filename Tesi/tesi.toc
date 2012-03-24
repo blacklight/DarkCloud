@@ -1,0 +1,38 @@
+\select@language {italian}
+\contentsline {chapter}{Abstract}{5}
+\contentsline {chapter}{\numberline {1}Introduzione}{7}
+\contentsline {chapter}{\numberline {2}Panoramica argomentazioni}{9}
+\contentsline {section}{\numberline {2.1}La sfida}{9}
+\contentsline {section}{\numberline {2.2}Studio delle reti p2p}{10}
+\contentsline {subsection}{\numberline {2.2.1}Napster}{10}
+\contentsline {subsection}{\numberline {2.2.2}Gnutella}{11}
+\contentsline {subsection}{\numberline {2.2.3}Kademlia}{12}
+\contentsline {subsection}{\numberline {2.2.4}Le darknet e Freenet}{13}
+\contentsline {subsection}{\numberline {2.2.5}Cloud computing}{14}
+\contentsline {chapter}{\numberline {3}Soluzioni alto livello}{17}
+\contentsline {section}{\numberline {3.1}Ingegnerizzazione del problema}{17}
+\contentsline {section}{\numberline {3.2}Struttura di rete}{18}
+\contentsline {section}{\numberline {3.3}Software architecture}{20}
+\contentsline {section}{\numberline {3.4}Protocollo di comunicazione tra nodi}{21}
+\contentsline {section}{\numberline {3.5}Salvataggio e recupero dei file}{22}
+\contentsline {section}{\numberline {3.6}Condivisione dei file}{22}
+\contentsline {section}{\numberline {3.7}Sicurezza del nodo}{23}
+\contentsline {subsection}{\numberline {3.7.1}Crittografia}{23}
+\contentsline {subsection}{\numberline {3.7.2}Scelte strutturali}{23}
+\contentsline {chapter}{\numberline {4}Soluzioni basso livello}{25}
+\contentsline {section}{\numberline {4.1}Linguaggi di programmazione e ambiente di sviluppo}{25}
+\contentsline {section}{\numberline {4.2}Analisi di un nodo}{26}
+\contentsline {section}{\numberline {4.3}Utilizzo}{26}
+\contentsline {section}{\numberline {4.4}Darkcloud e NetNode}{27}
+\contentsline {section}{\numberline {4.5}Database}{28}
+\contentsline {section}{\numberline {4.6}Comandi}{28}
+\contentsline {subsection}{\numberline {4.6.1}Ping}{28}
+\contentsline {subsection}{\numberline {4.6.2}Put}{29}
+\contentsline {subsection}{\numberline {4.6.3}Get}{30}
+\contentsline {subsection}{\numberline {4.6.4}Share}{32}
+\contentsline {section}{\numberline {4.7}punti ancora da trattare nel cap 4}{33}
+\contentsline {chapter}{\numberline {5}Risultati sperimentali}{35}
+\contentsline {chapter}{\numberline {6}Conclusioni}{37}
+\contentsline {subsection}{\numberline {6.0.1}Sviluppi futuri}{37}
+\contentsline {subsection}{\numberline {6.0.2}Considerazioni finali}{37}
+\contentsline {chapter}{Bibliografia}{38}
