@@ -61,23 +61,13 @@ L'avere una connessione però non è sufficiente a trasferire gli oggetti che noi 
 Quando due classi vogliono scambiarsi informazioni lo fanno essenzialmente tramite l'uso di due oggetto, la request e la response. Request e response sono estensioni della classe message. La differenza tra di loro è che una request deve richiamare un comando, mentre la response deve comunicare se l'operazione è andata bene o male. Dato che i comandi dei nostri nodi sono cinque anche le tipologie di request sono cinque, mentre i tipi di response sono due, risposta positiva o errore.
 Il codice degli oggetti request e response ha dei metodi che ci permettono di inserire al loro interno tutte le informazioni che vogliamo, e anche di organizzarle. Tramite il metodo appendField noi possiamo creare un nuovo campo, in questo campo possiamo inserire direttamente dei dati, oppure creare al suo interno degli attributi, tramite il metodo setContent. Quando abbiamo finito di inserire i campi e gli attributi le informazioni all'interno dei nostri oggetti sono pronte per essere spedite. Per fare questo utilizzeremo il metodo delle request e delle response che si chiama toString. Questo metodo prende tutti i dati che abbiamo riposto nel nostro oggetto, che abbiamo organizzato in campi e attributi, e lo converte in messaggi XML dovutamente formattati, sotto questa forma i nostri dati possono viaggiare sul socket SSL.
 Una volta ricevuto questo messaggio XML potrà facilmente essere trasformato nell'oggetto originario, request o response che sia. Questo avviene creando un nuovo oggetto request o response e fornendogli il messaggio tramite il metodo fromString. Dato che l'oggetto sa come sono formattai i dati in XML può agilmente convertirli nei campi e negli attributi originali. 
-In questi messaggi XML prima di essere spediti viene inserita la lunghezza del messaggio e la firma del mittente. Questo per facilitare la decodifica al metodo ricevente.
+In questi messaggi XML prima di essere spediti viene inserita la lunghezza del messaggio e la firma del mittente. Questo per facilitare la decodifica al metodo ricevente. Più precisamente è un messaggi formattato in 3 righe, nella prima riga cè la lunghezza del messaggio, nella seconda riga il contenuto informativo e nella terza riga la firma del mittente. 
 
 I metodi che gestiscono la scrittura di questo messaggi sui socket sono il send di NetNode e run di CLient.
 Quando un nodo vuole mandare un messaggio ad un altro nodo utilizza il metodo send all'interno dell'istanza NetNode che rappresento il nodo ricevente. Mentre il meccanismo di ricezione è basato sulla classe ClientService o ServerService. Queste classi sono continuamente in ascolto e se rilevano un messaggio SSL istanziano Client e gli passano il socket. Sia nel caso del send che del Client per prima cosa si creano due buffer uno per la lettura e uno per la scrittura. Nel send poi si allega alla request il campo nodeid, che comprende il proprio ip e la propria porta di ascolto, in modo che il ricevente abbia sempre i dati per identificare il mittente. 
-Si procede poi a scrivere sul buffer uscente il messaggio XML tramite il comando request.toString() di cui abbiamo parlato prima che traduce il contenuto della request in codice XML.
-
-
--send/client
-
-
-
-
-
-
-CONNESSIONI PROTETTE SSL ! socket, creazione del socket clientservice sempre in ascolto, formattazione xml classe messaggio e script py
-
-
+Si procede poi a scrivere sul buffer uscente il messaggio XML tramite il comando request.toString() di cui abbiamo parlato prima che traduce il contenuto della request in codice XML. 
+A questo punto il clientService o il serverService rilevano il messaggio, istanziano Client o Server e gli passano il riferimento al socket. Il Client per prima cosa legge la prima riga passata nel messaggio, che contiene la lunghezza, questo valore gli serve per decifrare il resto del messaggio. Ora legge dal buffer una riga lunga quanto era specificato nella prima riga. Forniamo in ingresso al metodo fromString, di un nuovo oggetto request, la stringa appena letta, i cui valori vengono cosi inseriti nella request stessa. Il Client ora salva in un array tutti i metodi che conosce il client, e poi li confronta con quello della request. Se trova una corrispondenza invoca tale metodo e gli passa l'oggetto request. Come risultato del codice del comando gli viene restituito un oggetto response, che procede a spedire sullo stesso socket dal quale ha letto tramite però un buffer di scrittura. Chiaramente per scriverlo usa il metodo toString dell'oggetto response ricevuto che traduce il contenuto in una stringa. Infine Client chiude i due buffer e il socket. 
+Il send riceve il messaggio tramite il socket, chiude il socket, traduce il response con fromString, chiude i buffer e il socket. Procede al controllo dell'esistenza del campo nodeid per verificare l'identità di chi gli ha risposto. Dopo di che controlla anche il campo che contiene la chiave pubblica, e controlla se corrisponde con quella che il nodo ha salvato in corrispondenza di quel nodeid. Se così non è sostituisce la chiave con quella ricevuta. Per concludere restituisce l'oggetto response alla classe che lo aveva invocato. 
 \section{Database}
 \begin{figure}
 \begin{center}
@@ -86,7 +76,56 @@ CONNESSIONI PROTETTE SSL ! socket, creazione del socket clientservice sempre in 
 \caption{Class Diagram}
 \label{Class Diagram}
 \end{figure}
-DATABASE+ PERCHè SQL,COME USIAMO IL DB , TABELLE, INSERIMENTI, GRAFICI!
+In Darkcloud si fa largo uso di database. I dati mantenuti sul nodo sono molti. Infatti le informazioni sui dati e sugli altri nodi non sono centralizzate o mantenute in remoto, ma sono invece tutte salvate in locale. Ogni nodo, sia client che server, possiede nella cartella principale del programma un database che si chiama darkcloud.db .
+Le tabelle principali che contiene sono :
+\begin{itemize}
+	\item FILE
+	\item FILEFRAGMENT
+	\item FILEPERMISSION
+	\item FILEUPDATE
+	\item NODE
+	\item NODETYPE
+	\item PERMISSIONTYPE
+	\item UPDATETYPE
+\end{itemize}
+Lo schema relaziona del database è riportato di seguito:\\ \\
+FILE(\underline{NAME},CONTENT,KEY,CHECKSUM,UPLOADER,CREATIONTIME,\\MODIFYTIME,MODIFYBY)\\
+NODETYPE(\underline{NODETYPEID},NODETYPESTR)\\
+UPDATETYPE(UPDATETYPEID,UPDATETYPESTR)\\
+FILEFRAGMENT(\underline{NAME,FRAGMENTID},CHECKSUM,NODEID)
+
+		\textbf{FK:} NODEID \textbf{REFERENCES} NODE(NODEID)
+		
+		\textbf{FK:} UPDTYPE \textbf{REFERENCES} UPDATETYPE(UPDATETYPEID)\\
+FILEUPDATE(\underline{UPDID},FILENAME,NODEID,UPDTYPE,UPDTIME)
+
+		\textbf{FK:} FILENAME \textbf{REFERENCES} FILE(NAME)
+		
+		\textbf{FK:} UPDTYPE \textbf{REFERENCES} UPDATETYPE(UPDATETYPEID)\\
+NODE(\underline{NODEID},PUBKEY,TYPE,ADDR,PORT)
+
+		\textbf{FK:} TYPE \textbf{REFERENCES} NODETYPE(NODETYPEID)\\
+PERMISSIONTYPE(\underline{PERMTYPEID},PERMTYPESTR)\\
+FILEPERMISSION(\underline{NODEID,FILENAME},PERM)
+
+		\textbf{FK:} NODEID \textbf{REFERENCES} NODE(NODEID)
+
+		\textbf{FK:} FILENAME \textbf{REFERENCES} FILE(NAME)
+
+		\textbf{FK:} PERM \textbf{REFERENCES} PERMISSION(PERMID)\\
+\\
+All'interno del codice gli inserimenti e le letture di dati sono frequenti, invece che elencarle qui si preferisce inserirle nelle descrizioni dei comandi riportati di seguito.
+\section{Crittografia}
+Questo programma fa della crittografia dei dati uno dei suoi punti di forza. Dato che informazioni preziose, che potrebbero essere utilizzare per risalire ai dati, sono salvate in locale si fa un largo uso di tecniche di cifratura. In questo progetto si usano due tipi di cifratura la AES e la RSA. Sono due tipi di cifratura diversi, il primo è simmetrico, il secondo asimmetrico.
+L'AES (Advanced Encryption Standard) conosciuto anche come Rijndael, è l'algoritmo di cifratura a blocchi utilizzata come standard dal governo degli Stati Uniti d'America. E' una tecnica di cifratura che perfino l'NSA utilizza per cifrare i documenti TOP SECRET. Questa tecnica di cifratura può utilizzare chiavi con lunghezza variabile di 128,192 o 256 bit e lavora con blocchi di dimensione prefissata di 128 bit. La dimensione maggiore della chiave crittografica garantisce una maggior sicurezza. Sono stati fatti dei test nel 2011 per vedere in quanto tempo con due gpu e un metodo di forza bruta si riuscisse a decifrare un file criptato in AES a 256 bit. Il risultato è stato che ci sarebbero voluti circa 13 anni di calcoli. All'interno del nostro programma per una maggior sicurezza infatti usiamo una chiave da 256bit. 
+Della cifratura asimmetrica si è già accennato nel capitolo due
+
+
+ Nel nostro programma classe cryptutil 256
+
+
+Un po per necessità dato che tiene i dati in locale.
+CRITTOGRAFIA , GRAFICI! 256 bit aes classe cryptutil base 64 rsa
 
 \section{Comandi}
 Andremo ora ad analizzare nello specifico quali passaggi avvengono e come vengono elaborati i dati nelle esecuzione dei comandi.
@@ -155,19 +194,7 @@ Il metodo receive legge per primo l'attributo del campo file che contiene il num
 
 Il client che ha inviato i dati riceve cosi la response positiva, e procede a sua volta a notificare al terminale che l'operazione è terminata con successo. Per farlo crea una response di tipo ACK e la restituisce al terminale tramite la classe Client. Il terminale da cui era partito il comando, in caso di ricezione del messaggio ACK stampa a schermo un messaggio che ci informa che il file è stato condiviso con il client specificato. 
 GRAFICO ?
-
-\section{Crittografia}
-Questo programma fa della crittografia dei dati uno dei suoi punti di forza. 
-
-Un po per necessità dato che tiene i dati in locale.
-CRITTOGRAFIA , GRAFICI! 256 bit aes classe cryptutil base 64 rsa
-
-
-
-
-
 \section{File di log}
-
 LOG
 
 

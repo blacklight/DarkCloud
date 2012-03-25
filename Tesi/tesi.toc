@@ -26,15 +26,15 @@
 \contentsline {section}{\numberline {4.4}Gli oggetti Darkcloud e NetNode}{29}
 \contentsline {section}{\numberline {4.5}Connessioni}{30}
 \contentsline {section}{\numberline {4.6}Database}{32}
-\contentsline {section}{\numberline {4.7}Comandi}{32}
-\contentsline {subsection}{\numberline {4.7.1}Ping}{32}
-\contentsline {subsection}{\numberline {4.7.2}Put}{33}
-\contentsline {subsection}{\numberline {4.7.3}Get}{34}
-\contentsline {subsection}{\numberline {4.7.4}Share}{36}
-\contentsline {section}{\numberline {4.8}Crittografia}{37}
-\contentsline {section}{\numberline {4.9}File di log}{38}
-\contentsline {chapter}{\numberline {5}Risultati sperimentali}{39}
-\contentsline {chapter}{\numberline {6}Conclusioni}{41}
-\contentsline {subsection}{\numberline {6.0.1}Sviluppi futuri}{41}
-\contentsline {subsection}{\numberline {6.0.2}Considerazioni finali}{41}
-\contentsline {chapter}{Bibliografia}{42}
+\contentsline {section}{\numberline {4.7}Crittografia}{33}
+\contentsline {section}{\numberline {4.8}Comandi}{34}
+\contentsline {subsection}{\numberline {4.8.1}Ping}{34}
+\contentsline {subsection}{\numberline {4.8.2}Put}{34}
+\contentsline {subsection}{\numberline {4.8.3}Get}{36}
+\contentsline {subsection}{\numberline {4.8.4}Share}{37}
+\contentsline {section}{\numberline {4.9}File di log}{39}
+\contentsline {chapter}{\numberline {5}Risultati sperimentali}{41}
+\contentsline {chapter}{\numberline {6}Conclusioni}{43}
+\contentsline {subsection}{\numberline {6.0.1}Sviluppi futuri}{43}
+\contentsline {subsection}{\numberline {6.0.2}Considerazioni finali}{43}
+\contentsline {chapter}{Bibliografia}{44}
