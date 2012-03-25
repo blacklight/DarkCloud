@@ -3,16 +3,17 @@
 In questo capitolo procederemo ad una disamina delle scelte tecniche fatte nel progetto darkcloud, e illustreremo il funzionamento dettagliato delle procedure.
 
 \section{Linguaggi di programmazione e ambiente di sviluppo}
+\begin{figure}
+\begin{center}
+\includegraphics[width=15.3cm]{img/logo.png}
+\end{center}
+\end{figure}
 Il linguaggio con il quale è stato scritto darkcloud è Java. La scelta è stata orientata verso questo linguaggio dopo considerazioni fatte sulla complessità del codice di cui si necessitava. Infatti dato che abbiamo optato per un software dove le chiavi di decriptazione, le informazioni su tutti i file, i dati degli altri nodi e molti altri dati sensibili sono salvati in locale si rendeva necessario adottare nel software forti mezzi per mantenere in sicurezza queste informazioni. In java gli strumenti per criptare sono di facile utilizzo. Inoltre anche le connessioni e la formattazione dei messaggi scambiati tra nodi risultava molto semplificata grazie alle classi già disponibili. Dato che si doveva costruire da zero una piattaforma per gestire una rete e questa avrebbe avuto bisogno di un codice molto articolato e con elementi con metodi simili ma caratterizzazioni diverse, ha reso java una scelta preferibile. Il software che realizzavamo doveva poi essere in grado di essere eseguito su piattaforme di diverso tipo, in quanto non solo i professionisti che lo usano potrebbero eseguirlo su sistemi operativi diversi, ma visto che ne saranno usate istanze su cloud computing e facile che lo si eseguirà in queste ultime su sistemi linux.
 Oltre al linguaggio java nel software utilizziamo l'sql per salvare i dati. In particolare abbiamo utilizzato il client sqlite3, dato che il nostro software deve salvare informazioni su molti altri nodi, su ogni file , e per ogni file sui frammenti è indispensabile un linguaggio di gestione database multi piattaforma e stabile come l'sql.
 Una scelta ormai assodata del gruppo di lavoro del professor Colajanni è l'utilizzo del sistema operativo Debian per la fase di sviluppo del software. Tale sistema operativo infatti garantisce nelle release stable la sicurezza di lavorare su un sistema molto stabile e nella comunità degli sviluppatori molto sfruttato. Essendo usato molto dai programmatori gli strumenti di compilazione, debug, e gli ambienti di sviluppo per programmare sono stati testati a lungo e quindi arrivati ad un buon livello di stabilità. Essendo sicuri che non darà spiacevoli sorprese in corso di programmazione. 
 L'ambiente di sviluppo java utilizzato è stato Eclipse. Gli strumenti che offre per il lavoro di programmazione sincronizzato lo rendono perfetto per il nostro caso, nel quale io e il correlatore della tesi, l'ingegner Fabio Manganiello, abbiamo lavorato simultaneamente sul codice.
 Per sincronizzare il codice abbiamo usato Google Code. Si tratta di un servizio di casa Google gratuito che permette di creare progetti software e consente a diverse persone di lavorarci. Abbiamo infatti installato il plugin Subversion per Eclipse, questo ci ha permesso di impostare il repository per il progetto. In questo modo chi lavora ad una classe può bloccarla direttamente da Eclipse e quando ha finito sbloccarla e caricare i risultati. 
-
 Quindi i requisiti di sistema sono una installazione di Java Runtime Environment versione 1.6.x o maggiore e il client di sqlite3.
-
-un po di loghi ??? debian java eclipse sql
-
 \section{Analisi di un nodo}
 Per funzionare un nodo, che sia client o server, ha bisogno di alcuni file. 
 Il file eseguibile darkcloud.jar, che è lo stesso sia per i client che per i server. Questo eseguibile deve essere avviato sia sui client che sui server. Una volta avviati almeno un client e un server sarà possibile iniziare ad usare il sistema tramite un terminale, potendo salvare file e recuperarli.
@@ -21,10 +22,7 @@ Il file di configurazione darklcoud.conf, che contiene tutti i setting del nodo.
 Il file darkcloud.keystore, che contiene le chiavi pubbliche degli altri nodi e i certificati ssl. Dato che nella rete utilizziamo connessioni protette SSL ogni nodo deve conoscere la chiave pubblica di ogni altro nodo, oltre a ciò le chiavi pubbliche degli altri nodi sono usate per cifrare i file che gli si mandano.
 Infine i file private.key e public.key che contengono le chiavi RSA pubblica e privata del nostro nodo usate per criptare e decriptare le informazioni da e per il nodo.
 Se si vuole spostare un nodo su un altro computer sarà sufficiente spostare i file sopra menzionati. Dato che la mappatura dei nodi è contenuta nel file darkcloud.conf dovremmo anche modificare i valori se cambierà l'ip del computer in uso, sia nelle impostazioni locali che nelle liste ip degli altri nodi che devono comunicare con noi.
-
-grafico con darkcloud e netnode???
-
-\section{Utilizzo}
+\section{Gestione dei nodi}
 Per gestire i nodi sono stati creati una serie di script che permettono di eseguire le funzioni fondamentali per il funzionamento della rete. Sono script da usare solo per modifiche da parte di amministratori della rete, gli utilizzatori finali non si troveranno mai a doverli usare dovranno solo interagire con i terminali. Questi script si possono trovare nella sotto directory 'net' e sono:
 \begin{itemize}
 	\item createNode.sh 
@@ -42,9 +40,7 @@ Lo script removeNode.sh ci permette di disinstallare il nodo dalla macchina loca
 Con lo script startNet.sh possiamo avviare tutti i nodi presenti nella directory 'net'. Se invece si vogliono avviare dei nodi singolarmente si utilizzerà lo script startNode.sh. 
 Quando un nodo viene avviato in una cartella nascosta che si chiama .run vengono creati dei file nel formato 'nome nodo'.pid nei quali vengono salvati i pid dei nodi avviati. Questo serve per evitare di aprire più istanze dello stesso nodo, azione che porterebbe a problemi sul database e alla gestione delle risorse. Al loro avvio gli script di avvio della rete o dei nodi controllano che nella cartella .run non ci siano già i pid dei nodi che si tenta di avviare. Inoltre gli script di avvio controllano che all'interno della cartella del nodo siano presenti l'eseguibile e il file di configurazione per evitare errori.
 Analogo discorso per lo script stopNet.sh tramite il quale possiamo spegnere tutti i nodi presenti nella directory 'net'. Mentre se si vuole spegnere un singolo nodo si utilizzerà lo script stopNode.sh. Oltre a inviare il segnale di kill del processo gli script di arresto cancellano dalla cartella .run i pid dei processi.
-Questi ultimi script non fanno altro che avviare 
-
-\section{Darkcloud e NetNode}
+\section{Gli oggetti Darkcloud e NetNode}
 Quando noi avviamo l'eseguibile di darkcloud, il main crea una istanza della classe Darkcloud e una della classe NetService. Darkcloud è la classe principale di ogni nodo, che contiene le variabili con le chiavi per la criptazione, le liste con i dati degli altri nodi, il collegamento con il database e altro ancora. NetService invece è la classe che prende i dati di ip e porta di ascolto del nostro nodo e crea il socket ssl che viene usato in ascolto. A seconda che un nodo sia client o server poi viene creata una istanza di ServerService o ClientService, che rimangono in ascolto di connessioni in entrata e in caso arrivino richieste istanziano a loro volta le classi Client o Server che si occupano di leggere il messaggio in arrivo e decifrare di che tipo di richiesta si tratta, invocando poi il giusto metodo di risposta delle classi ServerResponseMethod o ClientResponseMethod. Queste ultime due classi contengono il codice che un nodo esegue in risposta ad una richiesta. I dettagli del codice eseguito nei diversi comandi verrà analizzato nel paragrafo dedicato ai comandi.
 La classe Darkcloud contiene due paricolari hashmap, chiamati clientNodes e serverNodes. Una hashmap è una collezione di oggetti, che memorizza coppie chiave-valore, dove la chiave serve come indice. clientNodes e serverNodes infatti sono composti da oggetti di tipo NetNode e chiavi di tipo stringa. Gli oggetti NetNode sono istanze della classe omonima e vengono create come immagini degli altri nodi della rete, utilizzate quindi dalla classe Darkcloud come interfacce per comunicare con gli altri nodi.
 La classe clientService oltre ad aspettare le connessioni in arrivo crea all'avvio un istanza della classe NetPoll. Questa classe viene fatta partire all'inizio del programma e rimane attiva sempre fino a quando non viene terminato il programma, il suo compito è quello di controllare periodicamente quali nodi sono vivi e quali no. Fa questo inviandogli dei messaggi di tipo ping, e in base alla risposta segna gli oggetti NetNode come online o offline all'interno della struttura clientNodes e serverNodes. 
@@ -83,6 +79,13 @@ CONNESSIONI PROTETTE SSL ! socket, creazione del socket clientservice sempre in 
 
 
 \section{Database}
+\begin{figure}
+\begin{center}
+\includegraphics[width=15.3cm]{img/class diagram.png}
+\end{center}
+\caption{Class Diagram}
+\label{Class Diagram}
+\end{figure}
 DATABASE+ PERCHè SQL,COME USIAMO IL DB , TABELLE, INSERIMENTI, GRAFICI!
 
 \section{Comandi}

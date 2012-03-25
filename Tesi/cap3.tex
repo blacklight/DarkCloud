@@ -21,6 +21,13 @@ Il nostro software doveva essere prima di tutto realizzato con l'obbiettivo di f
 
 Dato che quindi abbiamo avuto l'opportunità di programmare da zero il software abbiamo deciso di renderlo più adattabile a future espansioni dal lato client. Invece che dare una classica veste grafica dalla quale gestire il programma, implementata nel client, abbiamo preferito creare un altra entità di interfacciamento con l'utente. Infatti il nostri client non ha interfaccia grafica, ma viene comandato da messaggi xml. Per utilizzarlo noi abbiamo creato uno script in python da usare come terminale per inviare i comandi al client. Questo è solo un esempio di terminale, ma è utile perché in futuro si potrà comandare il client tramite interfaccia web, piuttosto che con un applicazione per cellulari. 
 \section{Struttura di rete}
+\begin{figure}
+\begin{center}
+\includegraphics[width=15.3cm]{img/darkcloud.png}
+\end{center}
+\caption{Architettura di Darkcloud}
+\label{Architettura Darkcloud}
+\end{figure}
 La rete Darknet è stata progettata con l'obbiettivo di proteggere i dati in essa condivisa.
 
 La struttura di darkcloud si compone di tre tipi di nodi: i {\itshape server},i {\itshape client} e i {\itshape terminali}. 
@@ -32,13 +39,6 @@ La topologia della nostra rete permette a diversi terminali dello stesso utente 
 {\itshape Fully connected} sul lato client, cioè tutti i nodi client possono comunicare tra di loro e con tutti i server.
 Mentre invece il lato server può comunicare con tutti i client, ma i server non possono comunicare tra di loro.
 Questo semplicemente perché non è utile ai fini del loro compito. Mentre invece i client
-\begin{figure}
-\begin{center}
-\includegraphics[width=15.3cm]{img/darkcloud.png}
-\end{center}
-\caption{Architettura di Darkcloud}
-\label{Architettura Darkcloud}
-\end{figure}
 
 Gli indirizzi dei vari nodi, sia client che server, sono specificati manualmente nella prima configurazione dei nodi. Quindi i nodi non si aggiungono dinamicamente. Dato le dimensioni contenute che la rete si propone di avere questo è stato più semplice e più sicuro di un approccio dinamico. Per identificare un nodo all'interno della rete si usa una chiave, che è un codice alfanumerico generato da una apposita funzione che ogni nodo conosce, funzione che ricevendo in ingresso l'ip e la porta del nodo restituisce in uscite la chiave di riconoscimento del nodo. In questo modo si crea un nuovo network virtuale sopra la rete internet.
 
@@ -52,6 +52,14 @@ della sicurezza del nodo.
 
 I servizi di cloud computing che nella implementazione ultima andranno a mantenere i nostri file dovranno essere molteplici. Al momento se qualcuno ha bisogno di un certo numero di server su cui fare girare il proprio software può chiederlo direttamente ad un unico fornitore di servizi cloud. Per esempio per salvare i file in 100 parti diverse potrei chiedere ad un solo fornitore, uno tra Google Amazon Microsoft e altri, di caricare il mio software su 100 istanze che rappresentano sistemi operativi. A questo punto il mio file sarebbe salvato in parti sui server del fornitore scelto. Però questo non sarebbe astuto per tutelare i dati del nostro professionista che li vuole mantenere al sicuro. In quanto essendo dati tutti a disposizione del fornitore nulla gli impedirebbe di ricomporre il file e di provare poi a decrittarlo. Se a questo punto il provider ottenesse i nostri dati potrebbe usarli per ricerche di mercato o profilazione degli utenti. Essendo spesso questi provider di servizi in paesi diversi dal nostro il tutelarsi in tali problemi di privacy diventa complicato. Oppure se un attaccante che trovasse una falla nei sistemi dello stesso fornitore potrebbe fare lo stesso. Ancora se affidiamo tutti i dati allo stesso fornitore in caso di malfunzionamento delle strutture i dati potrebbero essere irraggiungibili per un dato periodo di tempo. Per questi motivi si preferirà utilizzare diversi servizi di cloud computing per avere un certo grado di ridondanza dei dati e non lasciarli tutti nelle mani di un unico operatore.
 \section{Software architecture}
+\begin{figure}
+\begin{center}
+\includegraphics[width=15.3cm]{img/nodi.png}
+\end{center}
+\caption{Darkcloud e NetNode}
+\label{Darkcloud e NetNode}
+\end{figure}
+
 Lo scopo di Darkcloud è quello di immagazzinare documenti in modo che nessuno che non abbia i permessi possa accedervi, permettendo anche di condividere il file tra più utenti.
 
 Nel nostro software abbiamo 2 tipi di classi usati per identificare i diversi nodi della rete.
