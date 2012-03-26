@@ -29,10 +29,10 @@
 \contentsline {section}{\numberline {4.7}Crittografia}{33}
 \contentsline {section}{\numberline {4.8}Comandi}{34}
 \contentsline {subsection}{\numberline {4.8.1}Ping}{34}
-\contentsline {subsection}{\numberline {4.8.2}Put}{34}
-\contentsline {subsection}{\numberline {4.8.3}Get}{36}
-\contentsline {subsection}{\numberline {4.8.4}Share}{37}
-\contentsline {section}{\numberline {4.9}File di log}{39}
+\contentsline {subsection}{\numberline {4.8.2}Put}{35}
+\contentsline {subsection}{\numberline {4.8.3}Get}{37}
+\contentsline {subsection}{\numberline {4.8.4}Share}{38}
+\contentsline {section}{\numberline {4.9}File di log}{40}
 \contentsline {chapter}{\numberline {5}Risultati sperimentali}{41}
 \contentsline {chapter}{\numberline {6}Conclusioni}{43}
 \contentsline {subsection}{\numberline {6.0.1}Sviluppi futuri}{43}

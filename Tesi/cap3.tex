@@ -76,9 +76,6 @@ Se si vuole aggiungere un comando basta aggiungerlo alla lista lista in Request.
 Vista la continua evoluzione delle soluzioni hardware portatili come smartphone e tablet abbiamo pensato di fare evolvere anche il nostro software in modo da poterlo fare collaborare con queste tecnologie.
 Infatti quando avviamo l'applicazione non è direttamente questa che andiamo ad usare per caricare i dati, ma sono dei terminali i quali poi contattano il client.
 Per esempio al momento abbiamo sviluppato uno script in python che si chiama client.py tramite il quale, dopo aver avviato il nostro client, possiamo inviare ricevere e condividere file sulla rete. Adottando una soluzione del genere quando in un secondo momento, o a seconda di esigenze, si vorrà sviluppare una applicazione per tablet, o una applicazione web che ci permetta di usare la nostra rete da browser o ancora integrare l'uso della rete in altri software non sarà necessario andare a modificare il programma client ma semplicemente creare una interfaccia. Per poter rendere questo possibile il nostro utente dovrà avere un pc connesso ad internet che gestirà tutte le richieste che le sue diverse interfacce inoltreranno. Un po come un convogliatore di richieste ed invii. Questo rende molto più semplice lo sviluppo di nuove soluzioni per usare darkcloud.
-
-
-DIAGRAMMI VARI
 \section{Protocollo di comunicazione tra nodi}
 Le connessioni tra i vari nodi avvengono tramite connessioni criptate con il protocollo {\itshape SSL}. Il Secure Socket Layer, SSL, è un protocollo crittografico che permette una comunicazione sicura su reti TCP/IP, come nel nostro caso reti lan o internet. La cifratura avviene al di sopra del livello di trasporto. 
 Questo protocollo consente alle applicazioni client/server di comunicare attraverso una rete in modo tale da prevenire il 'tampering' (manomissione) dei dati, la falsificazione e l'intercettazione.
