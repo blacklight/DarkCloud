@@ -34,7 +34,7 @@
 \contentsline {subsection}{\numberline {4.8.4}Share}{38}
 \contentsline {section}{\numberline {4.9}File di log}{40}
 \contentsline {chapter}{\numberline {5}Risultati sperimentali}{41}
-\contentsline {chapter}{\numberline {6}Conclusioni}{43}
-\contentsline {subsection}{\numberline {6.0.1}Sviluppi futuri}{43}
-\contentsline {subsection}{\numberline {6.0.2}Considerazioni finali}{43}
-\contentsline {chapter}{Bibliografia}{44}
+\contentsline {chapter}{\numberline {6}Conclusioni}{45}
+\contentsline {subsection}{\numberline {6.0.1}Sviluppi futuri}{45}
+\contentsline {subsection}{\numberline {6.0.2}Considerazioni finali}{45}
+\contentsline {chapter}{Bibliografia}{46}
