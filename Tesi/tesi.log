@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.3-1.40.12 (MiKTeX 2.9) (preloaded format=pdflatex 2012.1.9)  27 MAR 2012 23:40
+This is pdfTeX, Version 3.1415926-2.3-1.40.12 (MiKTeX 2.9) (preloaded format=pdflatex 2012.1.9)  28 MAR 2012 16:04
 entering extended mode
 **C:/Users/gionnino/Desktop/darkcloud/DarkCloud/tesi/tesi.tex
 (C:/Users/gionnino/Desktop/darkcloud/DarkCloud/tesi/tesi.tex
@@ -367,13 +367,13 @@ Package pdftex.def Info: img/cloud.png used on input line 118.
 (pdftex.def)             Requested size: 435.32724pt x 243.14066pt.
  [14])
 [15 <C:/Users/gionnino/Desktop/darkcloud/DarkCloud/tesi/img/cloud.png>]
-(C:\Users\gionnino\Desktop\darkcloud\DarkCloud\tesi\cap3.tex [16
-
-
-
-]
+[16] (C:\Users\gionnino\Desktop\darkcloud\DarkCloud\tesi\cap3.tex
 Capitolo 3.
-[17] <img/darkcloud.png, id=65, 554.82281pt x 565.36218pt>
+[17
+
+
+
+] <img/darkcloud.png, id=65, 554.82281pt x 565.36218pt>
 File: img/darkcloud.png Graphic file (type png)
 
 <use img/darkcloud.png>
@@ -478,23 +478,27 @@ LaTeX Warning: Characters dropped after `\end{verbatim}' on input line 113.
 
 ) [44] (C:\Users\gionnino\Desktop\darkcloud\DarkCloud\tesi\cap6.tex
 Capitolo 6.
-) [45
-
-
-
-] (C:\Users\gionnino\Desktop\darkcloud\DarkCloud\tesi\bibliografia.tex
-[46
-
+[45
 
 
 
 ]
+Underfull \hbox (badness 10000) in paragraph at lines 26--28
+
+ []
+
+) [46] (C:\Users\gionnino\Desktop\darkcloud\DarkCloud\tesi\bibliografia.tex
 Underfull \hbox (badness 5696) in paragraph at lines 10--13
 []\OT1/cmr/m/sc/12 Barbar[]a, Ja-jo-dia\OT1/cmr/m/n/12 . \OT1/cmr/m/it/12 De-te
 c-ting No-vel Net-work In-tru-sions Using Bayes
  []
 
-) [47] [48
+) [47
+
+
+
+
+] [48
 
 
 ] (C:\Users\gionnino\Desktop\darkcloud\DarkCloud\tesi\tesi.lof)
@@ -522,7 +526,7 @@ LaTeX Warning: There were multiply-defined labels.
 Here is how much of TeX's memory you used:
  3046 strings out of 494045
  45144 string characters out of 3145961
- 210641 words of memory out of 3000000
+ 209641 words of memory out of 3000000
  6195 multiletter control sequences out of 15000+200000
  14862 words of font info for 60 fonts, out of 3000000 for 9000
  715 hyphenation exceptions out of 8191
@@ -536,7 +540,7 @@ am Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Program
  Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy8.pfb><C:/Program Fi
 les (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmti12.pfb><C:/Program File
 s (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmtt12.pfb>
-Output written on tesi.pdf (51 pages, 659815 bytes).
+Output written on tesi.pdf (51 pages, 667199 bytes).
 PDF statistics:
  214 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
