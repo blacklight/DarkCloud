@@ -70,8 +70,6 @@ Una nuova tecnologia che sta nascendo e di cui si sente molto parlare è il {\its
 A patto di utilizzare le API di quel determinato fornitore di servizi cloud.
 Infatti i metodi all'interno delle nostre classi sono stati sviluppati tramite la {\itshape reflection}, metodo di programmazione che ci permette di creare facilmente comandi incapsulati, in modo da poterli in un secondo momento adattare alle varie API dei diversi servizi di {\itshape cloud-computing} 
 senza dover toccare il resto del codice.
-All'interno delle classi ServerResponseMethods.java e ClientResponseMethods.java troviamo le routine che rispettivamente i server i client eseguono quando gli arriva una richiesta specifica. Le diverse richieste sono elencate all'interno della classe Request.java, che modella le richieste che i nodi possono scambiarsi. Attraverso il tipo di Java definito Enum, Enumerazione, possiamo nella classi Request.java definire i diversi tipi di richieste semplicemente specificandone il nome, in modo che nelle classi ServerResponseMethods.java e ClientResponseMethods.java andiamo a indicare il codice da eseguire a seconda della richiesta ricevuta.
-Se si vuole aggiungere un comando basta aggiungerlo alla lista lista in Request.java e scriverne il codice nella classe di risposta del client o del server.
 
 Vista la continua evoluzione delle soluzioni hardware portatili come smartphone e tablet abbiamo pensato di fare evolvere anche il nostro software in modo da poterlo fare collaborare con queste tecnologie.
 Infatti quando avviamo l'applicazione non è direttamente questa che andiamo ad usare per caricare i dati, ma sono dei terminali i quali poi contattano il client.

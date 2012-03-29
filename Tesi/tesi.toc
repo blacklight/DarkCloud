@@ -2,19 +2,18 @@
 \contentsline {chapter}{Abstract}{5}
 \contentsline {chapter}{\numberline {1}Introduzione}{7}
 \contentsline {chapter}{\numberline {2}Panoramica argomentazioni}{9}
-\contentsline {section}{\numberline {2.1}La sfida}{9}
-\contentsline {section}{\numberline {2.2}Studio delle reti p2p}{10}
-\contentsline {subsection}{\numberline {2.2.1}Napster}{10}
-\contentsline {subsection}{\numberline {2.2.2}Gnutella}{11}
-\contentsline {subsection}{\numberline {2.2.3}Kademlia}{12}
-\contentsline {subsection}{\numberline {2.2.4}Le darknet e Freenet}{13}
-\contentsline {subsection}{\numberline {2.2.5}Cloud computing}{15}
+\contentsline {section}{\numberline {2.1}Studio delle reti p2p}{9}
+\contentsline {subsection}{\numberline {2.1.1}Napster}{9}
+\contentsline {subsection}{\numberline {2.1.2}Gnutella}{11}
+\contentsline {subsection}{\numberline {2.1.3}Kademlia}{11}
+\contentsline {subsection}{\numberline {2.1.4}Le darknet e Freenet}{12}
+\contentsline {subsection}{\numberline {2.1.5}Cloud computing}{14}
 \contentsline {chapter}{\numberline {3}Soluzioni alto livello}{17}
 \contentsline {section}{\numberline {3.1}Ingegnerizzazione del problema}{17}
 \contentsline {section}{\numberline {3.2}Struttura di rete}{18}
 \contentsline {section}{\numberline {3.3}Software architecture}{20}
-\contentsline {section}{\numberline {3.4}Protocollo di comunicazione tra nodi}{22}
-\contentsline {section}{\numberline {3.5}Salvataggio e recupero dei file}{23}
+\contentsline {section}{\numberline {3.4}Protocollo di comunicazione tra nodi}{21}
+\contentsline {section}{\numberline {3.5}Salvataggio e recupero dei file}{22}
 \contentsline {section}{\numberline {3.6}Condivisione dei file}{23}
 \contentsline {section}{\numberline {3.7}Sicurezza del nodo}{24}
 \contentsline {subsection}{\numberline {3.7.1}Crittografia}{24}
@@ -28,13 +27,11 @@
 \contentsline {section}{\numberline {4.6}Database}{32}
 \contentsline {section}{\numberline {4.7}Crittografia}{33}
 \contentsline {section}{\numberline {4.8}Comandi}{34}
-\contentsline {subsection}{\numberline {4.8.1}Ping}{34}
+\contentsline {subsection}{\numberline {4.8.1}Ping}{35}
 \contentsline {subsection}{\numberline {4.8.2}Put}{35}
 \contentsline {subsection}{\numberline {4.8.3}Get}{37}
 \contentsline {subsection}{\numberline {4.8.4}Share}{38}
 \contentsline {section}{\numberline {4.9}File di log}{40}
 \contentsline {chapter}{\numberline {5}Risultati sperimentali}{41}
 \contentsline {chapter}{\numberline {6}Conclusioni}{45}
-\contentsline {section}{\numberline {6.1}Sviluppi futuri}{45}
-\contentsline {section}{\numberline {6.2}Considerazioni finali}{46}
 \contentsline {chapter}{Bibliografia}{47}
