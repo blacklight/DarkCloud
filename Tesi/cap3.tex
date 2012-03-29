@@ -96,12 +96,33 @@ Il primo comando che andiamo ad analizzare è il PING.
 Questo tipo di request viene usato dai nodi per verificare se gli altri sono online e quanto sono distanti calcolando i tempi di latenza.
 Infatti è un comando che può essere usato anche dal nostro script client.py per verificare se i nodi client, tramite i quali possiamo mandare i file sulla rete, sono vivi. Ancora i nodi client effettuano un ping regolarmente verso i server in modo che quando devono caricare file sulla rete sappiano già quanti server sono disponibili e quindi in quante parti possono suddividere il file. Oltre a effettuare il ping regolare dei server si effettua anche quello degli altri client, in modo da effettuare le condivisioni dei file con loro in modo veloce. 
 \section{Salvataggio e recupero dei file}
+\begin{figure}
+\begin{center}
+\includegraphics[width=15.3cm]{img/put.png}
+\end{center}
+\caption{Invio di un file su Darkcloud}
+\label{Invio di un file su Darkcloud}
+\end{figure}
 Quando uno dei nostri client decide di caricare un file sulla nostra rete darkcloud, utilizza il comando PUT. Come abbiamo accennato prima parlando dell'architettura del software, noi abbiamo un interfaccia o molteplici, tramite le quali possiamo comandare il nostro client. Quando inviamo da un interfaccia un comando per salvare sulla rete il file, dal nostro script client.py per esempio,specifichiamo il nome del file locale, il nome con cui vogliamo che il file venga salvato e il client che dobbiamo usare. L'interfaccia specificherà quindi al client che abbiamo indicato il contenuto del file e un comando di put tramite un messaggio XML, il nostro client controllerà prima l'integrità del file poi lo cripterà, con specifiche che vedremo in dettaglio nel prossimo capitolo. Dopo di che in base a quanti server il client avrà a disposizione frammenterà il file in tante parti quanti sono i server. Procederà poi a preparare tanti oggetti request quanto sono i frammenti, nei quali specificherà che si tratta di messaggi put, quale è il contenuto del file, il checksum per controlli di integrità e infine invierà la richiesta ai server con il metodo send. Accertandosi che i server rispondano in maniera affermativa di aver ricevuto il frammento e di averlo correttamente salvato.Per poter ricomporre il file il client salverà su un database interno i dettagli dei file e di ogni frammento, compreso il checksum di ognuno e il nodo server sul quale è stato salvato.
+\begin{figure}
+\begin{center}
+\includegraphics[width=15.3cm]{img/get.png}
+\end{center}
+\caption{Recupero di un file da Darkcloud}
+\label{Recupero di un file da Darkcloud}
+\end{figure}
 
 L'operazione di recupero viene effettuata dalle interfacce. Nel caso del nostro client.py dobbiamo specificare il client che vogliamo usare, e il nome con il quale il file è salvato in remoto. Quindi l'interfaccia client.py invierà al client una richiesta di tipo GET specificando il nome del file.
 Il client a sua volta ricevuta la request recupera il campo con il nome e va a cercare nel sua database i dettagli di come e dove è stato salvato il file. Quindi su quali server, in quale ordine e quali sono i checksum delle singole parti. Una volta inviate le request ai server specificando i nomi dei frammenti, recupera le response mandate dai server. Ora può controllare l'integrità dei file calcolando il checksum dei frammenti ricevuti e confrontandolo con il checksum che aveva salvato. Se i dati sono corretti ricompone il file e lo decripta, inviandolo per concludere all'interfaccia che glielo aveva richiesto.
 
 \section{Condivisione dei file}
+\begin{figure}
+\begin{center}
+\includegraphics[width=15.3cm]{img/share.png}
+\end{center}
+\caption{Condivisione di un file con un altro utente}
+\label{Condivisione di un file con un altro utente}
+\end{figure}
 Fino ad ora abbiamo visto a grandi linee il funzionamento del salvataggio e del recupero del file, ma dato che questa rete deve permettere a persone di condividere tra di loro file è stato anche implementato un comando SHARE. Questo comando non va a toccare i server, in quanto non avrebbe avuto senso replicare i file sulla rete per ogni utente, infatti quello che abbiamo permesso con il comando share è stato la condivisione della conoscenza di un comando con un altro nodo.
 Se un ipotetico utente1 volesse condividere un file con l'utente2 sarà sufficiente usare il comando share.
 Dato che la conoscenza e i dati sono salvati sul client e non sulle interfacce, sarà l'utente1 che chiederà tramite la sua interfaccia al suo client di inviare al client di utente2 i dati riguardanti un determinato file. In modo che in un secondo momento se l'utente2 vuole recuperare il file possa semplicemente chiederlo al suo client tramite la sua interfaccia. La procedura parte con l'utente1 che invia tramite la sua interfaccia un richiesta al suo client specificando il nome del file remoto, e i parametri del client di utente2, nel nostro caso specifico di client.py per esempio si tratta dell'indirizzo ip e della porta di ascolto. Il client di utente1 andrà a recuperare dal suo database tutti i dati necessari a recuperare il file. Ora creerà un oggetto request di un tipo RECEIVE e gli allegherà tali dati. Il comando receive serve per salvare nel database locale  i dati di un file, e dei suoi frammenti, che non è stato caricato nella rete dal nodo che esegue il comando. Quindi a seguito della ricezione dei dati e dell'esecuzione del comando receive il client dell'utente2 sarà in grado come l'utente1 di recuperare il file.
