@@ -1,16 +1,31 @@
 \chapter{Introduzione}
-Un ladro scassina una serratura, entra in una stanza buia piena di schedari.
-Inizia a frugare negli indici e trova la scheda che gli interessa.
-Prende la scheda ed esce di fretta, una guardia preposta al controllo del ufficio lo insegue, ma 
-il ladro più veloce lo semina e scappa.
+Un ladro scassina una serratura, entra in una stanza buia piena di schedari. Inizia a frugare negli indici e trova la scheda che gli interessa. Prende la scheda ed esce di fretta, una guardia preposta al controllo del ufficio lo insegue, ma il ladro più veloce lo semina e scappa.
 
-Nel corso degli anni i dati sono stati sempre più centralizzati e il rischio di fughe di dati è 
-aumentato al punto che si è reso necessario prendere
-provvedimenti per la loro sicurezza.
+Nel corso degli anni i dati sono stati sempre più centralizzati e il rischio di fughe di dati è aumentato al punto che si è reso necessario prendere provvedimenti per la loro sicurezza.
 
-La tecnologia ha fornito strumenti sempre più efficaci per proteggere i propri dati, sistemi di 
-sorveglianza, sensori vari, tutto atto alla sicurezza fisica .
-Poi sono nati i primi calcolatori, più simili a macchine da scrivere, con sistemi di protezione fisici 
-che 
-\\
-IN FASE DI SCRITTURA
+La tecnologia ha fornito strumenti sempre più efficaci per proteggere i propri dati, sistemi di sorveglianza, sensori vari, tutto atto alla sicurezza fisica. Poi sono nati i primi calcolatori, più simili a macchine da scrivere, con sistemi di protezione fisici. L'avvento della rete ha fatto nascere le prime scorribande digitali remote. Non era più necessario recarsi in un luogo per rubare dati, bastava connettersi telefonicamente alla vittima. I primi tempi le misure di sicurezza erano praticamente inesistenti su internet, con il verificarsi di problemi clamorosi si è iniziato a porre dei limiti di accesso e proteggere le connessioni. 
+Internet si è evoluta, è entrata in tutte le case e allo stato attuale miliardi di persone vi hanno accesso.
+
+Cosa succede se un sistema è disponibile 24 ore su 24 a miliardi di persone e non ha un buon livello di sicurezza ?
+
+Le notizie di attualità ce lo dicono, Playstation Network messo KO per un mese. Intrusioni non autorizzate nei sistemi FBI. Sottrazione di dati personali dei clienti dagli archivi Citigroup. Sono solo alcuni dei moltissimi incidenti di sicurezza informatica che hanno costellato il 2011\cite{clusit}. Lo scorso anno, improvvisamente, la tecnologia è divenuta un 'colabrodo' agli occhi dell'opinione pubblica, anche per via della velocità con cui si sono susseguiti episodi di questo tipo. Che cosa sta accadendo, nel mondo e in Italia, sul fronte della sicurezza ?
+
+A livello globale si può osservare una esponenziale in termini di numero e gravità di attacchi informatici, attacchi che secondo una stima riportata nel Rapporto Clusit 2012 ha portato in tasca al Cybercrime dai 7 ai 12 miliardi di dollari l'anno. Ma questa è una briciola in confronto alla stima dei danni riportati dalle aziende in modo diretto o indiretto a seguito di un attacco, si parla di 400 miliardi di dollari. 
+
+Questi numeri non sono riportati per allarmare il lettore, ma per fare capire che il tema della sicurezza informatica non è un problema secondario. Non sorprende che negli ultimi anni aziende del calibro di IBM, Microsoft, Google acquisiscano aziende più piccole specializzate in sicurezza informatica. 
+
+Il problema però non tocca solo le grandi aziende, questo era vero una volta, perché solo le aziende di una certa dimensione avevano server interni e un sistema informatizzato raggiungibile dell'esterno. Oggi non esiste azienda che non abbia un calcolatore collegato ad internet, nella minima delle ipotesi. Nella stragrande maggioranza dei casi invece si hanno uffici con reti di computer, sedi dislocate per il mondo collegate tra di loro tramite lan, server interni per rendere disponibile materiale a consulenti e molto altro ancora. Si compirebbe un madornale errore pensando che se una azienda non tratta materiale sensibile allora non è in pericolo. Per esempio aziende concorrenti potrebbero voler rubare tecnologie e brevetti aziendali, consultare liste clienti e fornitori, male intenzionati potrebbero infettare le macchine per usarle come zombie nelle proprie botnet.
+
+Oggi più che mai bisogna rendere consapevoli le aziende della situazione nella quale il mondo dell'informatica si sta evolvendo. Oltre che con l'informazione questo è possibile sviluppando software sicuro e proponendo soluzioni in tale settore. 
+
+Nella protezione dei dati di un utente gli aspetti da tenere sotto controllo sono molti, partendo dall'informatizzazione dell'utente, lo sviluppo di interfacce che tutelino la sicurezza dell'utilizzatore, sistemi operativi sicuri, software testato contro vulnerabilità e molto altro. L'aspetto che approfondiremo nel corso di questa tesi riguarda l'architettura del software e del network. Nello specifico si osserverà la nascita di un idea, gli studi che l'hanno fatta crescere e il codice che l'ha concretizzata. Parliamo di Darkcloud, un software che permette la condivisione di file tra diversi utenti. Però non è una condivisione pura e semplice, ma una condivisione pensata studiata e realizzata per essere altamente protetta e resistente. Protetta per impedire a persone non autorizzate di venire in nessun modo a contatto con anche solo la benché minima parte delle nostre informazioni. Resistente per garantire un dato sempre presente e controllato.
+
+Nello specifico nel capitolo 2 saranno esposte le necessità che hanno fatto nascere questo progetto, analizzeremo la situazione attuale nel campo del file sharing e di quelle che sono state le architetture storiche che hanno cambiato la storia. Vedremo quale è lo stato attuale della ricerca nel campo della condivisione protetta. Questo ci aiuterà a scegliere una architettura adatta al nostro software. Introdurremo inoltre il discorso del cloud computing e delle darknet.
+
+Nel capitolo 3 invece si esporranno e motiveranno le scelte fatte a livello di progettazione e implementazione delle features. Passando poi ad illustrare l'architettura software e network tramite una disamina ad alto livello.
+
+Nel capitolo 4 potrete trovare un analisi di basso livello del software, cioè la descrizione tecnica del programma e delle sue funzioni spiegate nei minimi dettagli. Come i comandi, le varie classi, le tecniche di crittografia le gerarchie di dati e molto altro.
+
+Il capitolo 5 si basa sui test fatti sul software. Dopo aver ultimato il software infatti abbiamo eseguito molti test per verificarne le prestazioni e la scalabilità.
+
+Il capitolo 6 è quello conclusivo dove si illustrano i possibili sviluppi futuri, con qualche consiglio ai posteri. Il capitolo si chiude con le considerazioni finila su tutta la attività di tesi.
