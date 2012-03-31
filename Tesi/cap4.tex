@@ -122,6 +122,14 @@ I file che troviamo nella cartella principale del nostro nodo che riguardano la 
 Andremo ora ad analizzare nello specifico quali passaggi avvengono e come vengono elaborati i dati nelle esecuzione dei comandi.
 I comandi principali sono PING, PUT, GET e SHARE.
 \subsection{Ping}
+\begin{figure}
+\begin{center}
+\includegraphics[width=15.3cm]{img/ping act.png}
+\end{center}
+\caption{Activity diagram del comando ping}
+\label{Activity diagram del comando ping}
+\end{figure}
+
 Il metodo ping viene utilizzato principalmente nei terminali per verificare se un nodo client è vivo e nella classe NetPoll che lo usa per tenere aggiornato l'elenco dei server e dei client vivi sulla rete.
 La sintassi del comando ping è:
 
@@ -130,6 +138,14 @@ python client.py -r PING -h 'indirizzo ip del client' -p 'porta di ascolto del c
 Il nodo che riceve un messaggio ha sempre in ascolto sul socket SSL la classe ClientService. Questa classe controlla continuamente se sul socket ci siano richieste. Quando ne rileva una crea una istanza della classe Client e gli passa il riferimento al socket. L'istanza di Client legge dal socket il messaggio, legge di che tipo di request si tratta e in questo caso invoca il metodo ping della classe ResponseMethods. ResponseMethods è una generalizzazione che poi viene estesa per creare ClientResponseMethods e ServerResponseMethods. L'istanza di Client passa al metodo ping la request contenuta nel messaggio. Per prima cosa il metodo ping recupera dal messaggio il campo pubkey e il campo nodeid, che contengono rispettivamente la chiave pubblica e il codice identificativo del nodo che gli ha mandato la richiesta . In seguito confrontando il nodeid con quelli salvati nelle strutture clientNodes e serverNodes controlla se è un nodo con il quale può dialogare e se si tratta di un server o di un client. In caso si tratti di un nodo conosciuto confronta la chiave pubblica del messaggio con quella che ha salvato nell'oggetto NetNode corrispondente, in caso sia uguale crea un nuovo oggetto response, gli da l'attributo di tipo ACK cioè di risposta positiva, e lo restituisce all'istanza di Client. L'istanza di Client ricevuto l'oggetto response lo scrive nel socket SSL, lo invia, chiude la connessione e muore.
 In questa spiegazione abbiamo parlato solo della richiesta ping nel caso sia ricevuta da un nodo di tipo client, ma a differenza degli altri comandi il ping funziona nello stesso modo sia per i server che per i client. Con l'unica differenza che il client risponde anche se non viene specificata la pubkey e il nodeid, in quanto il client può ricevere richieste anche da terminali che di fatto non possiedono tali caratteristiche.
 \subsection{Put}
+\begin{figure}
+\begin{center}
+\includegraphics[width=15.3cm]{img/put act.png}
+\end{center}
+\caption{Activity diagram del comando put}
+\label{Activity diagram del comando put}
+\end{figure}
+
 La ricezione del comando put da parte di un client invece innesca una sequenza di azioni che comprendono anche l'interazione con i server. Quindi analizzeremo sia la risposta al comando put di un client che di un server.
 La sintassi del comando put è:
 
