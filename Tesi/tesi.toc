@@ -1,37 +1,37 @@
 \select@language {italian}
-\contentsline {chapter}{Abstract}{5}
-\contentsline {chapter}{\numberline {1}Introduzione}{7}
-\contentsline {chapter}{\numberline {2}Panoramica argomentazioni}{9}
-\contentsline {section}{\numberline {2.1}Studio delle reti p2p}{9}
-\contentsline {subsection}{\numberline {2.1.1}Napster}{9}
-\contentsline {subsection}{\numberline {2.1.2}Gnutella}{11}
-\contentsline {subsection}{\numberline {2.1.3}Kademlia}{11}
-\contentsline {subsection}{\numberline {2.1.4}Le darknet e Freenet}{12}
-\contentsline {subsection}{\numberline {2.1.5}Cloud computing}{14}
-\contentsline {chapter}{\numberline {3}Soluzioni alto livello}{17}
-\contentsline {section}{\numberline {3.1}Ingegnerizzazione del problema}{17}
-\contentsline {section}{\numberline {3.2}Struttura di rete}{18}
-\contentsline {section}{\numberline {3.3}Software architecture}{20}
-\contentsline {section}{\numberline {3.4}Protocollo di comunicazione tra nodi}{21}
-\contentsline {section}{\numberline {3.5}Salvataggio e recupero dei file}{22}
-\contentsline {section}{\numberline {3.6}Condivisione dei file}{24}
-\contentsline {section}{\numberline {3.7}Sicurezza del nodo}{26}
-\contentsline {subsection}{\numberline {3.7.1}Crittografia}{26}
-\contentsline {subsection}{\numberline {3.7.2}Scelte strutturali}{26}
-\contentsline {chapter}{\numberline {4}Soluzioni basso livello}{29}
-\contentsline {section}{\numberline {4.1}Linguaggi di programmazione e ambiente di sviluppo}{29}
-\contentsline {section}{\numberline {4.2}Analisi di un nodo}{30}
-\contentsline {section}{\numberline {4.3}Gestione dei nodi}{30}
-\contentsline {section}{\numberline {4.4}Gli oggetti Darkcloud e NetNode}{31}
-\contentsline {section}{\numberline {4.5}Connessioni}{32}
-\contentsline {section}{\numberline {4.6}Database}{34}
-\contentsline {section}{\numberline {4.7}Crittografia}{36}
-\contentsline {section}{\numberline {4.8}Comandi}{37}
-\contentsline {subsection}{\numberline {4.8.1}Ping}{37}
-\contentsline {subsection}{\numberline {4.8.2}Put}{39}
-\contentsline {subsection}{\numberline {4.8.3}Get}{41}
-\contentsline {subsection}{\numberline {4.8.4}Share}{42}
-\contentsline {section}{\numberline {4.9}File di log}{44}
-\contentsline {chapter}{\numberline {5}Risultati sperimentali}{45}
-\contentsline {chapter}{\numberline {6}Conclusioni}{49}
-\contentsline {chapter}{Bibliografia}{51}
+\contentsline {chapter}{\numberline {1}Introduzione}{5}
+\contentsline {section}{\numberline {1.1}Obiettivi del software}{6}
+\contentsline {chapter}{\numberline {2}Stato dell'arte}{7}
+\contentsline {section}{\numberline {2.1}Napster}{7}
+\contentsline {section}{\numberline {2.2}Gnutella}{7}
+\contentsline {section}{\numberline {2.3}Kademlia}{9}
+\contentsline {section}{\numberline {2.4}Le darknet e Freenet}{10}
+\contentsline {section}{\numberline {2.5}Cloud computing}{12}
+\contentsline {chapter}{\numberline {3}Progetto}{15}
+\contentsline {section}{\numberline {3.1}Obbiettivi di dettaglio}{15}
+\contentsline {section}{\numberline {3.2}Struttura di rete}{16}
+\contentsline {section}{\numberline {3.3}Architettura software}{18}
+\contentsline {section}{\numberline {3.4}Protocollo di comunicazione tra nodi}{19}
+\contentsline {section}{\numberline {3.5}Salvataggio e recupero dei file}{20}
+\contentsline {section}{\numberline {3.6}Condivisione dei file}{22}
+\contentsline {section}{\numberline {3.7}Sicurezza del nodo}{24}
+\contentsline {subsection}{\numberline {3.7.1}Crittografia}{24}
+\contentsline {chapter}{\numberline {4}Realizzazione}{27}
+\contentsline {section}{\numberline {4.1}Linguaggi di programmazione e ambiente di sviluppo}{27}
+\contentsline {section}{\numberline {4.2}Analisi di un nodo}{28}
+\contentsline {section}{\numberline {4.3}Gestione dei nodi}{28}
+\contentsline {section}{\numberline {4.4}Gli oggetti Darkcloud e NetNode}{29}
+\contentsline {section}{\numberline {4.5}Connessioni}{30}
+\contentsline {section}{\numberline {4.6}Database}{32}
+\contentsline {section}{\numberline {4.7}Crittografia}{34}
+\contentsline {section}{\numberline {4.8}Comandi}{35}
+\contentsline {subsection}{\numberline {4.8.1}Ping}{35}
+\contentsline {subsection}{\numberline {4.8.2}Put}{37}
+\contentsline {subsection}{\numberline {4.8.3}Get}{39}
+\contentsline {subsection}{\numberline {4.8.4}Share}{40}
+\contentsline {section}{\numberline {4.9}File di log}{42}
+\contentsline {chapter}{\numberline {5}Risultati sperimentali}{43}
+\contentsline {section}{\numberline {5.1}Ambienti di test}{43}
+\contentsline {section}{\numberline {5.2}Risultati sperimentali}{44}
+\contentsline {chapter}{\numberline {6}Conclusioni}{47}
+\contentsline {chapter}{Bibliografia}{49}

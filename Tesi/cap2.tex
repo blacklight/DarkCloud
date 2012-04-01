@@ -1,11 +1,6 @@
-\chapter{Panoramica argomentazioni}
+\chapter{Stato dell'arte}
 In questo capitolo analizzeremo i protocolli che oggi rappresentano lo standard de facto nella condivisione dei file. Anche se molti sono conosciuti come programmi usati per scambio di materiale multimediale, i protocolli che vi sono alla base di tutti i programmi presenti sul mercato usati dai professionisti per condividere file. 
-\section{Studio delle reti p2p}
-Tutte le grandi reti moderne di condivisione e ricerca sono nate dallo studio e miglioramento di quelle che sono state le pietre miliari nell'evoluzione del networking.
-Per capire cosa ci serviva e come poterlo ottenere anche noi siamo partiti studiando alcuni modelli che sono stati rivoluzionari nel periodo della loro nascita.
-In particolare si vedranno le caratteristiche di Napster, Gnutella, Kademlia e Freenet\cite{freenetsite}.
-Nell'analizzare queste reti però teniamo sempre presente il nostro caso di studio, il gruppo di professionisti che deve condividere materiale sensibile, e presteremo infatti attenzione a quelli che possono essere i punti a noi favorevoli\cite{slashdot} e quelli che invece andrebbero a discapito dei nostri obbiettivi.
-\subsection{Napster}
+\section{Napster}
 \begin{figure}
 \begin{center}
 \includegraphics[width=15.3cm]{img/napster.png}
@@ -18,7 +13,7 @@ Non era un sistema p2p puro, in quanto manteneva una lista di tutti gli utenti c
 Quindi se un nodo voleva trovare un file mandava la richiesta al server centrale che rispondeva con la lista dei nodi che lo avevano e il richiedente poteva fare partire il download da tali nodi. Quando utente decideva di condividere un file mandava i dettagli al server centrale che li salvava.
 Quindi le condivisioni vere e proprie avvenivano tra gli utenti, era come un programma di istant messaging avanzato.
 I vantaggi di questo tipo di struttura risiedono nella velocità di reperibilità delle informazioni, in quanto l'elenco era disponibile a tutti direttamente. Altro punto a suo favore è la velocità di condivisione, in quanto i nodi si scambiano i file creando una connessione diretta tra di loro, e il file è in chiaro e completo.Però quelle che sono le sue caratteristiche positive in una prima analisi, si rivelano i suoi maggiori punti deboli se vista dalla prospettiva di utenti male intenzionati. Per esempio se il server centrale cade, tutta la rete smette di funzionare. Oppure se un ente vuole proibire la diffusione di certo materiale gli basterà confiscare il server per sapere chi ne era il detentore e con chi lo ha condiviso. Il connettersi direttamente con un altro utente porta inoltre tutta una serie di punti deboli, come la facile trasmissione di infezioni informatiche, il fatto che se il nodo è spento il file non è raggiungibile, la mancanza di certificati di autenticità permette ad utenti di modificare contenuti e re immetterli in rete.
-\subsection{Gnutella}
+\section{Gnutella}
 \begin{figure}
 \begin{center}
 \includegraphics[width=15.3cm]{img/gnutella.png}
@@ -30,7 +25,7 @@ Gnutella\cite{gnutella} a differenza di Napster è un software peer to peer puro.
 I computer degli utenti sono gli unici nodi che compongono la rete. Quando un certo numero di utenti installa il software sulla propria macchina, automaticamente Gnutella riconosce i nodi vicini e e in questo modo la rete si amplia. Le ricerche avvengono secondo la tecnica del flodding, cioè un nodo per trovare un file manda una richiesta ai nodi vicini, se i nodi vicini non hanno il file richiesto inoltrano a loro volta a tutti nodi che conoscono la stessa domanda, tranne al nodo che gli ha mandato la richiesta originale. Per evitare il collasso della rete le richieste avevano un numero massimo di 'salti' tra nodi, al termine del quale venivano cancellate. Anche i trasferimenti di file vengono sostenuti dai nodi intermedi tra richiedente e possessore. 
 Questo protocollo ha il vantaggio di essere potenzialmente inarrestabile, fortemente stabile e molto dinamico permettendo a nodi di entrare e uscire senza modificare le prestazioni della rete. Non teme quindi attacchi che ne arrestino il funzionamento. 
 Però la tecnica di ricerca molto rudimentale non garantisce di trovare un file, e i tempi per trovarlo comunque possono essere molto lunghi.
-\subsection{Kademlia}
+\section{Kademlia}
 \begin{figure}
 \begin{center}
 \includegraphics[width=15.3cm]{img/kademlia.png}
@@ -46,7 +41,7 @@ Ogni nodo oltre ad avere il suo pezzetto di lista sa anche in che direzione la l
 Nelle DHT il reperimento dei file è molto più veloce di quanto non lo sarebbe in una rete completamente decentralizzata dove è necessario fare rimbalzare la richiesta verso moltissimi nodi.
 Ed è anche più sicuro del metodo centralizzato, non solo dal punto di vista della privacy ma anche di stabilità della rete stessa e di reperibilità dei file.
 Dato che non esiste nessun tipo di centralizzazione e i nodi sono responsabili dei file che caricano però, se tutti i nodi che conoscono un file si spengono l'intera rete non riuscirà più a raggiungere quel file.
-\subsection{Le darknet e Freenet}
+\section{Le darknet e Freenet}
 \begin{figure}
 \begin{center}
 \includegraphics[width=15.3cm]{img/freenet.png}
@@ -88,7 +83,7 @@ Oltre al funzionamento sulla topografia sopra descritta, cioè sfruttando tutti i
 E' una opportunità in più tramite la quale si va a chiudere la rete dei propri amici. Può essere utile per esempio per alcuni gruppi di utenti che condividono file riservati e non vogliono renderli disponibili a tutta la rete Freenet.
 Ogni caratteristica di questo programma è atta ad aumentarne l'anonimato e possiamo dire che funziona molto bene.
 Tuttavia queste scelte sono state fatte essendo consapevoli che i file condivisi sarebbero stati documenti di piccole dimensioni. Questo rende lento e difficile la gestione di file di dimensioni maggiori, caratteristica che il nostro software deve avere.
-\subsection{Cloud computing}
+\section{Cloud computing}
 \begin{figure}
 \begin{center}
 \includegraphics[width=15.3cm]{img/cloud.png}

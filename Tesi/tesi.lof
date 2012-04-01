@@ -1,20 +1,20 @@
 \select@language {italian}
 \addvspace {10\p@ }
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {2.1}{\ignorespaces Architettura di Napster}}{10}
-\contentsline {figure}{\numberline {2.2}{\ignorespaces Architettura di Gnutella}}{11}
-\contentsline {figure}{\numberline {2.3}{\ignorespaces Indici dei file in Kademlia}}{12}
-\contentsline {figure}{\numberline {2.4}{\ignorespaces Esempio protocollo Freenet}}{13}
-\contentsline {figure}{\numberline {2.5}{\ignorespaces Struttura Cloud Computing}}{15}
+\contentsline {figure}{\numberline {2.1}{\ignorespaces Architettura di Napster}}{8}
+\contentsline {figure}{\numberline {2.2}{\ignorespaces Architettura di Gnutella}}{8}
+\contentsline {figure}{\numberline {2.3}{\ignorespaces Indici dei file in Kademlia}}{9}
+\contentsline {figure}{\numberline {2.4}{\ignorespaces Esempio protocollo Freenet}}{10}
+\contentsline {figure}{\numberline {2.5}{\ignorespaces Struttura Cloud Computing}}{12}
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {3.1}{\ignorespaces Architettura di Darkcloud}}{19}
-\contentsline {figure}{\numberline {3.2}{\ignorespaces Darkcloud e NetNode}}{21}
-\contentsline {figure}{\numberline {3.3}{\ignorespaces Invio di un file su Darkcloud}}{23}
-\contentsline {figure}{\numberline {3.4}{\ignorespaces Recupero di un file da Darkcloud}}{24}
-\contentsline {figure}{\numberline {3.5}{\ignorespaces Condivisione di un file con un altro utente}}{25}
+\contentsline {figure}{\numberline {3.1}{\ignorespaces Architettura di Darkcloud}}{17}
+\contentsline {figure}{\numberline {3.2}{\ignorespaces Darkcloud e NetNode}}{19}
+\contentsline {figure}{\numberline {3.3}{\ignorespaces Invio di un file su Darkcloud}}{21}
+\contentsline {figure}{\numberline {3.4}{\ignorespaces Recupero di un file da Darkcloud}}{22}
+\contentsline {figure}{\numberline {3.5}{\ignorespaces Condivisione di un file con un altro utente}}{23}
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {4.1}{\ignorespaces Class Diagram}}{35}
-\contentsline {figure}{\numberline {4.2}{\ignorespaces Activity diagram del comando ping}}{38}
-\contentsline {figure}{\numberline {4.3}{\ignorespaces Activity diagram del comando put}}{39}
+\contentsline {figure}{\numberline {4.1}{\ignorespaces Class Diagram}}{33}
+\contentsline {figure}{\numberline {4.2}{\ignorespaces Activity diagram del comando ping}}{36}
+\contentsline {figure}{\numberline {4.3}{\ignorespaces Activity diagram del comando put}}{37}
 \addvspace {10\p@ }
 \addvspace {10\p@ }
