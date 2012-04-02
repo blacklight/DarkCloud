@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.3-1.40.12 (MiKTeX 2.9) (preloaded format=pdflatex 2012.1.9)  1 APR 2012 23:10
+This is pdfTeX, Version 3.1415926-2.3-1.40.12 (MiKTeX 2.9) (preloaded format=pdflatex 2012.1.9)  2 APR 2012 13:26
 entering extended mode
 **C:/Users/gionnino/Desktop/darkcloud/DarkCloud/tesi/tesi.tex
 (C:/Users/gionnino/Desktop/darkcloud/DarkCloud/tesi/tesi.tex
@@ -350,19 +350,13 @@ Package pdftex.def Info: img/freenet.png used on input line 47.
 (pdftex.def)             Requested size: 435.32724pt x 195.77464pt.
 
 [10 <C:/Users/gionnino/Desktop/darkcloud/DarkCloud/tesi/img/freenet.png>]
-Overfull \hbox (8.76787pt too wide) in paragraph at lines 80--86
-[]\OT1/cmr/m/n/12 Il pro-gram-ma che ab-bia-mo scel-to di stu-dia-re nel-la ca-
-te-go-ria dar-k-net e sta-to Freenet[[]].
- []
-
-
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [11]
 <img/cloud.png, id=45, 791.20593pt x 441.90094pt>
 File: img/cloud.png Graphic file (type png)
  <use img/cloud.png>
-Package pdftex.def Info: img/cloud.png used on input line 89.
+Package pdftex.def Info: img/cloud.png used on input line 88.
 (pdftex.def)             Requested size: 435.32724pt x 243.14066pt.
  [12 <C:/Users/gionnino/Desktop/darkcloud/DarkCloud/tesi/img/cloud.png>]) [13]
 (C:\Users\gionnino\Desktop\darkcloud\DarkCloud\tesi\cap3.tex [14
@@ -375,70 +369,65 @@ Capitolo 3.
 File: img/darkcloud.png Graphic file (type png)
 
 <use img/darkcloud.png>
-Package pdftex.def Info: img/darkcloud.png used on input line 26.
+Package pdftex.def Info: img/darkcloud.png used on input line 24.
 (pdftex.def)             Requested size: 435.32724pt x 443.60324pt.
  [16] [17 <C:/Users/gionnino/Desktop/darkcloud/DarkCloud/tesi/img/darkcloud.png
 >] <img/nodi.png, id=66, 648.92438pt x 449.42906pt>
 File: img/nodi.png Graphic file (type png)
 
 <use img/nodi.png>
-Package pdftex.def Info: img/nodi.png used on input line 57.
+Package pdftex.def Info: img/nodi.png used on input line 54.
 (pdftex.def)             Requested size: 435.32724pt x 301.49992pt.
  [18] [19 <C:/Users/gionnino/Desktop/darkcloud/DarkCloud/tesi/img/nodi.png>]
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 88.
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 85.
  ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\base\omscmr.fd"
 File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <12> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 88.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 85.
 
 <img/put.png, id=74, 790.45313pt x 557.08125pt>
 File: img/put.png Graphic file (type png)
  <use img/put.png>
-Package pdftex.def Info: img/put.png used on input line 101.
+Package pdftex.def Info: img/put.png used on input line 98.
 (pdftex.def)             Requested size: 435.32724pt x 306.80365pt.
 
 <img/get.png, id=75, 788.19469pt x 563.10374pt>
 File: img/get.png Graphic file (type png)
  <use img/get.png>
-Package pdftex.def Info: img/get.png used on input line 109.
+Package pdftex.def Info: img/get.png used on input line 106.
 (pdftex.def)             Requested size: 435.32724pt x 311.00545pt.
  [20]
 <img/share.png, id=80, 520.19344pt x 514.17094pt>
 File: img/share.png Graphic file (type png)
  <use img/share.png>
-Package pdftex.def Info: img/share.png used on input line 121.
+Package pdftex.def Info: img/share.png used on input line 118.
 (pdftex.def)             Requested size: 435.32724pt x 430.28445pt.
-
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [21 <C:/Users/gionnino/Desktop/darkcloud/DarkCloud/tesi/img/put.png>]
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [22 <C:/Users/gionnino/Desktop/darkcloud/DarkCloud/tesi/img/get.png>] [23 <C:/
-Users/gionnino/Desktop/darkcloud/DarkCloud/tesi/img/share.png>]) [24] [25]
-(C:\Users\gionnino\Desktop\darkcloud\DarkCloud\tesi\cap4.tex [26
-
-
-
-]
+ [21 <C:/Users/gionnino/Desktop/darkcloud/DarkCloud/tesi/img/put.png>] [22 <C:/
+Users/gionnino/Desktop/darkcloud/DarkCloud/tesi/img/get.png>] [23 <C:/Users/gio
+nnino/Desktop/darkcloud/DarkCloud/tesi/img/share.png>]) [24]
+(C:\Users\gionnino\Desktop\darkcloud\DarkCloud\tesi\cap4.tex
 Capitolo 4.
 
 Overfull \hbox (0.66997pt too wide) in paragraph at lines 5--5
 []\OT1/cmr/bx/n/17.28 Linguaggi di pro-gram-ma-zio-ne e am-bien-te di svi-
  []
 
-<img/logo.png, id=100, 455.7025pt x 142.5325pt>
+<img/logo.png, id=93, 455.7025pt x 142.5325pt>
 File: img/logo.png Graphic file (type png)
  <use img/logo.png>
 Package pdftex.def Info: img/logo.png used on input line 8.
 (pdftex.def)             Requested size: 435.32724pt x 136.16194pt.
- [27 <C:/Users/gionnino/Desktop/darkcloud/DarkCloud/tesi/img/logo.png>] [28] [2
-9] [30]
-Underfull \vbox (badness 2460) has occurred while \output is active []
+ [25
 
- [31]
-<img/classdiagram.png, id=119, 486.31688pt x 804.75656pt>
+
+
+ <C:/Users/gionnino/Desktop/darkcloud/DarkCloud/tesi/img/logo.png>] [26] [27] [
+28]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [29]
+<img/classdiagram.png, id=112, 486.31688pt x 804.75656pt>
 File: img/classdiagram.png Graphic file (type png)
 
 <use img/classdiagram.png>
@@ -453,46 +442,46 @@ Underfull \hbox (badness 10000) in paragraph at lines 86--91
 
  []
 
-[32] [33 <C:/Users/gionnino/Desktop/darkcloud/DarkCloud/tesi/img/classdiagram.p
+[30] [31 <C:/Users/gionnino/Desktop/darkcloud/DarkCloud/tesi/img/classdiagram.p
 ng>]
 Underfull \hbox (badness 10000) in paragraph at lines 110--113
 
  []
 
-[34]
+[32]
 
 LaTeX Warning: Characters dropped after `\end{verbatim}' on input line 119.
 
 
 LaTeX Warning: File `img/ping act.png' not found on input line 127.
 
-<img/ping act.png, id=129, 573.64313pt x 794.2172pt>
+<img/ping act.png, id=123, 573.64313pt x 794.2172pt>
 File: img/ping act.png Graphic file (type png)
  <use img/ping act.png>
 Package pdftex.def Info: img/ping act.png used on input line 127.
 (pdftex.def)             Requested size: 435.32724pt x 602.72667pt.
 
-[35] [36 <C:/Users/gionnino/Desktop/darkcloud/DarkCloud/tesi/img/ping act.png>]
+[33] [34 <C:/Users/gionnino/Desktop/darkcloud/DarkCloud/tesi/img/ping act.png>]
 
 LaTeX Warning: File `img/put act.png' not found on input line 143.
 
-<img/put act.png, id=137, 883.80188pt x 789.70032pt>
+<img/put act.png, id=131, 883.80188pt x 789.70032pt>
 File: img/put act.png Graphic file (type png)
  <use img/put act.png>
 Package pdftex.def Info: img/put act.png used on input line 143.
 (pdftex.def)             Requested size: 435.32724pt x 388.98091pt.
 
-[37 <C:/Users/gionnino/Desktop/darkcloud/DarkCloud/tesi/img/put act.png>]
+[35 <C:/Users/gionnino/Desktop/darkcloud/DarkCloud/tesi/img/put act.png>]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [38]
-[39] [40]
+ [36]
+[37] [38]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [41])
-[42] (C:\Users\gionnino\Desktop\darkcloud\DarkCloud\tesi\cap5.tex
+ [39])
+[40] (C:\Users\gionnino\Desktop\darkcloud\DarkCloud\tesi\cap5.tex
 Capitolo 5.
-[43
+[41
 
 
 
@@ -500,20 +489,19 @@ Capitolo 5.
 
 LaTeX Warning: Characters dropped after `\end{verbatim}' on input line 13.
 
-[44]
 
 LaTeX Warning: Characters dropped after `\end{verbatim}' on input line 64.
 
-[45]
+[42] [43]
 
 LaTeX Warning: Characters dropped after `\end{verbatim}' on input line 111.
 
 
 LaTeX Warning: Characters dropped after `\end{verbatim}' on input line 113.
 
-) [46] (C:\Users\gionnino\Desktop\darkcloud\DarkCloud\tesi\cap6.tex
+) [44] (C:\Users\gionnino\Desktop\darkcloud\DarkCloud\tesi\cap6.tex
 Capitolo 6.
-[47
+[45
 
 
 
@@ -522,8 +510,8 @@ Underfull \hbox (badness 10000) in paragraph at lines 18--20
 
  []
 
-) [48] (C:\Users\gionnino\Desktop\darkcloud\DarkCloud\tesi\bibliografia.tex
-[49
+) [46] (C:\Users\gionnino\Desktop\darkcloud\DarkCloud\tesi\bibliografia.tex
+[47
 
 
 
@@ -534,16 +522,16 @@ Overfull \hbox (21.56pt too wide) in paragraph at lines 84--86
 /specs.html 
  []
 
-) [50] (C:\Users\gionnino\Desktop\darkcloud\DarkCloud\tesi\tesi.lof)
+) [48] (C:\Users\gionnino\Desktop\darkcloud\DarkCloud\tesi\tesi.lof)
 \tf@lof=\write4
- [51
+ [49
 
 
 ]
-(C:\Users\gionnino\Desktop\darkcloud\DarkCloud\tesi\ringraziamenti.tex [52
+(C:\Users\gionnino\Desktop\darkcloud\DarkCloud\tesi\ringraziamenti.tex [50
 
 ])
-[53
+[51
 
 ] (C:\Users\gionnino\Desktop\darkcloud\DarkCloud\tesi\tesi.aux
 (C:\Users\gionnino\Desktop\darkcloud\DarkCloud\tesi\fronte.aux)
@@ -562,11 +550,11 @@ LaTeX Warning: There were multiply-defined labels.
 Here is how much of TeX's memory you used:
  3091 strings out of 494045
  45553 string characters out of 3145961
- 210456 words of memory out of 3000000
+ 209456 words of memory out of 3000000
  6244 multiletter control sequences out of 15000+200000
  14862 words of font info for 60 fonts, out of 3000000 for 9000
  715 hyphenation exceptions out of 8191
- 34i,11n,43p,2934b,317s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 34i,11n,43p,2863b,317s stack positions out of 5000i,500n,10000p,200000b,50000s
 <C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx12.pfb>
 <C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmcsc10.pfb><
 C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/
@@ -576,9 +564,9 @@ am Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Program
  Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy8.pfb><C:/Program Fi
 les (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmti12.pfb><C:/Program File
 s (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmtt12.pfb>
-Output written on tesi.pdf (53 pages, 1067350 bytes).
+Output written on tesi.pdf (51 pages, 1064752 bytes).
 PDF statistics:
- 225 PDF objects out of 1000 (max. 8388607)
+ 219 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
  71 words of extra memory for PDF output out of 10000 (max. 10000000)
 

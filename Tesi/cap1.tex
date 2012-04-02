@@ -11,7 +11,7 @@ ma dietro solidi firewall.
 
 Nella società attuale però non ci si può permettere di avere importanti moli di dati
 che non siano fruibili da persone autorizzate sparse per tutto il globo.
-Quindi la disponibilità in rete è un requisito fondamentale, che espone però i nostri dati a gravi rischi.
+Quindi la disponibilità in rete è un requisito fondamentale, che espone però i dati a gravi rischi.
 Riporre le proprie speranze in soluzioni monolitiche come pesanti crittografie o 
 enti che raccolgono molti dati si è rivelato nel tempo una soluzione non vincente.
 
@@ -23,23 +23,23 @@ La condizione necessaria che un software di condivisione deve soddisfare è prote
 La soluzione a questo problema è garantita da tre fattori, frammentazione del file, darknet e cloud computing. 
 
 Questi tre elementi non sono abitualmente usati insieme. 
-Il cloud computing sta vedendo un forte momento di crescita e le sue implementazioni stanno crescendo molto. Però molte aziende che offrono servizi online usano i dati, che noi condividiamo, per ricerche di mercato e altri motivi che non tutelano la nostra privacy. Quindi non è consigliabile usare tali servizi per dati confidenziali.
-Esistono strumenti di anonimato e reti di condivisione anonima che proteggono gli utilizzatori come le darknet, ma sono spesso poco pratici a causa di tempi di condivisione troppo lunghi che rendono impraticabile scambi di file di grosse dimensioni o scambi frequenti con altri utenti. 
-La condivisione di file frammentati oggi è molto diffusa, ma per motivi di velocità di condivisione non di sicurezza. Unire questi elementi in un unico software ci permette invece di avere uno strumento innovativo ed estremamente sicuro. 
+Il cloud computing sta vedendo un forte momento di crescita e le sue implementazioni stanno crescendo molto. Però molte aziende che offrono servizi online usano i dati degli utenti per ricerche di mercato e altri motivi che non tutelano la privacy. Per tale motivo non è consigliabile usare tali servizi per dati confidenziali.
+Esistono strumenti di anonimato e reti di condivisione anonima che proteggono gli utilizzatori come le darknet ma sono spesso poco pratici a causa di tempi di condivisione troppo lunghi che rendono impraticabile scambi di file di grosse dimensioni o scambi frequenti con altri utenti. 
+L'utilizzo della frammentazione dei file oggi è molto diffusa per aumentare le velocità di condivisione. Questo strumento può anche essere utilizzato per aumentare la sicurezza. Unire questi elementi in un unico software permette invece di avere uno strumento innovativo ed estremamente sicuro. 
 
 \section{Obiettivi del software}
-L'obbiettivo primario del nostro software è la sicurezza dei dati che l'utente condivide con gli altri utilizzatori della sua rete. Oltre questo vi sono anche aspetti che si rendono necessari legati alla architettura e al funzionamento del nostro software cioè un codice con forte modularità e scalabilità.
+L'obbiettivo primario del software è la sicurezza dei dati che l'utente condivide con gli altri utilizzatori della sua rete. Vi sono anche aspetti che si rendono necessari legati all'architettura e al funzionamento del software cioè un codice con forte modularità e scalabilità.
 
 Darkcloud è un software di condivisione file, cioè un programma che installato su almeno due computer e almeno un server permette ad ogni utente di salvare file sul server e condividere il file con l'altro utente. 
 Il dato viene frammentato e salvato in vari nodi server sparsi sul web. Si ricorre ad un tipo di rete molto utilizzato nel'underground digitale, che viene definita {\itshape darknet}. In questo tipo di rete solo chi ne fa parte sa da chi è composta la rete. 
 
-Questa tesi si pone l'obbiettivo di guidare il lettore in tutto il ciclo di creazione del programma Darkcloud, dallo studio fino alla fase di test.
+Questo documento si pone l'obbiettivo di guidare il lettore in tutto il ciclo di creazione del programma Darkcloud, dallo studio fino alla fase di test.
 
-Nel capitolo due si analizza lo stato in cui si trova al momento la ricerca nel campo delle reti di condivisione, inoltre viene fatta un analisi dei protocolli più utilizzati sottolineandone pregi e difetti. 
+Nel capitolo due viene analizzato lo stato in cui si trova al momento la ricerca nel campo delle reti di condivisione, inoltre viene fatta un analisi dei protocolli più utilizzati sottolineandone pregi e difetti. 
 
-Nel capitolo tre si motivano le scelte fatte in sede di progetto, si illustrano la struttura e il funzionamento del software. Inoltre si descrive la topologia della rete che sta dietro Darkcloud. 
+Nel capitolo tre vengono motivate le scelte fatte in sede di progetto, si illustrano la struttura e il funzionamento del software. Inoltre si descrive la topologia della rete che sta dietro Darkcloud. 
 
-Il capitolo quattro entra nello specifico nella descrizione del software. Nei primi paragrafi si parla degli strumenti utilizzati come la crittografia, i database e le tecniche di connessione. Si procede all'esposizione dettagliata del funzionamento dei comandi e delle meccaniche che stanno dietro il software.
+Il capitolo quattro contiene la descrizione di basso livello del software. Nei primi paragrafi si parla degli strumenti utilizzati come la crittografia, i database e le tecniche di connessione. Si procede all'esposizione dettagliata del funzionamento dei comandi e delle meccaniche che stanno dietro il software.
 
 Il capitolo cinque tratta i test eseguiti al termine della fase di programmazione, comprende la descrizione degli ambienti usati per il testing, i risultati sperimentali e un analisi della scalabilità del software. 
 
